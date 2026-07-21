@@ -3,17 +3,17 @@
 @section('title', 'Daftar Akun Baru - Proats E-Catalog')
 
 @section('content')
-<div class="max-w-md mx-auto my-8">
+<div class="max-w-md mx-auto my-3 md:my-8 px-2 md:px-0">
     <div class="bg-white rounded-2xl shadow-xl overflow-hidden border border-amber-100">
         
         <!-- Header Banner -->
-        <div class="bg-gradient-to-r from-amber-400 via-yellow-400 to-amber-300 p-8 text-slate-950 text-center relative overflow-hidden border-b border-amber-300">
-            <img src="{{ asset('assets/images/logo.png') }}" alt="Proats Logo" class="h-14 w-auto mx-auto mb-3 object-contain bg-white/95 p-1 rounded-2xl shadow-lg border border-amber-200">
-            <h1 class="text-2xl font-extrabold tracking-tight">Daftar Akun Proats</h1>
+        <div class="bg-gradient-to-r from-amber-400 via-yellow-400 to-amber-300 p-6 md:p-8 text-slate-950 text-center relative overflow-hidden border-b border-amber-300">
+            <img src="{{ asset('assets/images/logo.png') }}" alt="Proats Logo" class="h-12 md:h-14 w-auto mx-auto mb-2.5 object-contain bg-white/95 p-1 rounded-2xl shadow-lg border border-amber-200">
+            <h1 class="text-xl md:text-2xl font-extrabold tracking-tight">Daftar Akun Proats</h1>
             <p class="text-xs text-slate-900 font-semibold mt-1">Buat akun untuk checkout & nikmati berbagai promo</p>
         </div>
 
-        <div class="p-6 md:p-8 space-y-6">
+        <div class="p-5 md:p-8 space-y-5">
 
             <!-- Flash Error -->
             @if(isset($errors) && $errors->any())

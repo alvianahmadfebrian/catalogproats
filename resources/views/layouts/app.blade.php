@@ -140,14 +140,14 @@
 
     <!-- Main Navigation Header (Bright Pure White Theme) -->
     <header class="bg-white sticky top-0 z-40 shadow-xs border-b border-amber-100/80 text-slate-900">
-        <div class="max-w-7xl mx-auto px-4 pt-3.5 pb-3.5">
-            <div class="flex items-center justify-between gap-4 md:gap-8">
+        <div class="max-w-7xl mx-auto px-3 md:px-4 py-2.5 md:py-3.5">
+            <div class="flex items-center justify-between gap-2 md:gap-8">
                 <!-- Brand Logo -->
-                <a href="{{ route('catalog.index') }}" class="flex items-center gap-3 text-slate-950 group shrink-0">
-                    <img src="{{ asset('assets/images/logo.png') }}" alt="Proats Logo" class="h-10 md:h-12 w-auto object-contain bg-amber-50/60 p-1 rounded-xl shadow-xs group-hover:scale-105 transition transform border border-amber-200">
+                <a href="{{ route('catalog.index') }}" class="flex items-center gap-2 md:gap-3 text-slate-950 group shrink-0">
+                    <img src="{{ asset('assets/images/logo.png') }}" alt="Proats Logo" class="h-9 md:h-12 w-auto object-contain bg-amber-50/60 p-1 rounded-xl shadow-xs group-hover:scale-105 transition transform border border-amber-200">
                     <div class="flex flex-col">
-                        <span class="text-2xl md:text-3xl font-extrabold tracking-tight text-slate-950 leading-none">Proats</span>
-                        <span class="text-[10px] md:text-xs font-bold tracking-widest text-amber-600 uppercase">E-Catalog</span>
+                        <span class="text-xl md:text-3xl font-extrabold tracking-tight text-slate-950 leading-none">Proats</span>
+                        <span class="text-[9px] md:text-xs font-bold tracking-widest text-amber-600 uppercase hidden sm:inline-block">E-Catalog</span>
                     </div>
                 </a>
 
@@ -160,10 +160,10 @@
                         <input type="text" 
                                name="search"
                                value="{{ request('search') }}"
-                               placeholder="Cari alat musik pilihanmu di Proats Catalog (contoh: Snare Drum, Angklung, Gitar)..." 
-                               class="w-full pl-4 pr-14 py-2.5 md:py-3 bg-amber-50/40 text-gray-900 text-sm rounded-xl focus:outline-none focus:bg-white shadow-xs border border-amber-200 placeholder-gray-400 focus:ring-2 focus:ring-amber-500">
-                        <button type="submit" class="absolute right-1.5 top-1.5 bottom-1.5 px-4 bg-amber-500 hover:bg-amber-600 text-slate-950 font-extrabold rounded-lg transition flex items-center justify-center shadow-xs">
-                            <i class="fas fa-magnifying-glass text-sm"></i>
+                               placeholder="Cari alat musik..." 
+                               class="w-full pl-3 md:pl-4 pr-11 md:pr-14 py-2 md:py-3 bg-amber-50/40 text-gray-900 text-xs md:text-sm rounded-xl focus:outline-none focus:bg-white shadow-xs border border-amber-200 placeholder-gray-400 focus:ring-2 focus:ring-amber-500">
+                        <button type="submit" class="absolute right-1 top-1 bottom-1 px-3 md:px-4 bg-amber-500 hover:bg-amber-600 text-slate-950 font-extrabold rounded-lg transition flex items-center justify-center shadow-xs">
+                            <i class="fas fa-magnifying-glass text-xs md:text-sm"></i>
                         </button>
                     </form>
                     <!-- Quick Keywords -->
@@ -176,27 +176,90 @@
                     </div>
                 </div>
 
-                <!-- Cart Button Trigger -->
-                <div class="shrink-0 flex items-center">
-                    <a href="{{ route('cart.index') }}" @click="$dispatch('open-cart')" class="relative p-2.5 text-slate-950 hover:text-amber-600 transition flex items-center gap-2 font-bold cursor-pointer">
+                <!-- Right Header Actions (Cart & User Icon for Mobile) -->
+                <div class="shrink-0 flex items-center gap-1 md:gap-3">
+                    <a href="{{ route('cart.index') }}" @click="$dispatch('open-cart')" class="relative p-1.5 md:p-2.5 text-slate-950 hover:text-amber-600 transition flex items-center gap-2 font-bold cursor-pointer">
                         <div class="relative">
-                            <i class="fas fa-cart-shopping text-2xl text-slate-900"></i>
+                            <i class="fas fa-cart-shopping text-xl md:text-2xl text-slate-900"></i>
                             <span x-data x-text="$store.cart ? $store.cart.count() : 0" 
-                                  class="absolute -top-2 -right-2.5 bg-amber-500 text-slate-950 font-extrabold text-[11px] px-1.5 py-0.5 rounded-full border-2 border-white shadow-xs min-w-[20px] text-center">
+                                  class="absolute -top-2 -right-2.5 bg-amber-500 text-slate-950 font-extrabold text-[10px] md:text-[11px] px-1.5 py-0.5 rounded-full border-2 border-white shadow-xs min-w-[18px] md:min-w-[20px] text-center">
                                 0
                             </span>
                         </div>
                         <span class="hidden md:inline font-extrabold text-sm">Keranjang</span>
                     </a>
+
+                    <!-- Mobile Direct User Link -->
+                    <div class="md:hidden flex items-center">
+                        @auth
+                            <a href="{{ route('profile.index') }}" class="p-1 rounded-full border border-amber-400 flex items-center justify-center">
+                                <img src="{{ Auth::user()->avatar ?? 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80' }}" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80'" class="w-7 h-7 rounded-full object-cover" alt="User">
+                            </a>
+                        @else
+                            <a href="{{ route('login') }}" class="px-2.5 py-1 bg-amber-500 text-slate-950 font-extrabold text-xs rounded-lg shadow-2xs hover:bg-amber-600 transition">
+                                Masuk
+                            </a>
+                        @endauth
+                    </div>
                 </div>
             </div>
         </div>
     </header>
 
     <!-- Main Content Container -->
-    <main class="flex-grow max-w-7xl w-full mx-auto px-2 md:px-4 py-4 md:py-6">
+    <main class="flex-grow max-w-7xl w-full mx-auto px-2 md:px-4 py-3 md:py-6 pb-24 md:pb-6">
         @yield('content')
     </main>
+
+    <!-- Mobile Fixed Bottom Navigation Bar -->
+    <nav class="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-amber-200/80 shadow-lg md:hidden">
+        <div class="grid grid-cols-5 h-14 text-[10px] font-bold text-slate-600">
+            <a href="{{ route('catalog.index') }}" class="flex flex-col items-center justify-center gap-0.5 {{ request()->routeIs('catalog.index') && !request('category') ? 'text-amber-600' : 'hover:text-amber-600' }}">
+                <i class="fas fa-store text-lg"></i>
+                <span>Katalog</span>
+            </a>
+
+            <a href="{{ route('catalog.index') }}#catalog-section" class="flex flex-col items-center justify-center gap-0.5 hover:text-amber-600">
+                <i class="fas fa-layer-group text-lg"></i>
+                <span>Kategori</span>
+            </a>
+
+            <a href="{{ route('cart.index') }}" class="flex flex-col items-center justify-center gap-0.5 relative {{ request()->routeIs('cart.index') ? 'text-amber-600' : 'hover:text-amber-600' }}">
+                <div class="relative">
+                    <i class="fas fa-cart-shopping text-lg"></i>
+                    <span x-data x-text="$store.cart ? $store.cart.count() : 0" 
+                          class="absolute -top-1.5 -right-2 bg-amber-500 text-slate-950 font-extrabold text-[9px] px-1 py-0.2 rounded-full border border-white shadow-2xs min-w-[16px] text-center">
+                        0
+                    </span>
+                </div>
+                <span>Keranjang</span>
+            </a>
+
+            @auth
+            <button @click="$dispatch('toggle-user-chat')" class="flex flex-col items-center justify-center gap-0.5 hover:text-amber-600">
+                <i class="fas fa-headset text-lg"></i>
+                <span>Chat Admin</span>
+            </button>
+            @else
+            <a href="{{ route('login') }}" class="flex flex-col items-center justify-center gap-0.5 hover:text-amber-600">
+                <i class="fas fa-headset text-lg"></i>
+                <span>Chat Admin</span>
+            </a>
+            @endauth
+
+            @auth
+            <a href="{{ route('profile.index') }}" class="flex flex-col items-center justify-center gap-0.5 {{ request()->routeIs('profile.index') ? 'text-amber-600' : 'hover:text-amber-600' }}">
+                <img src="{{ Auth::user()->avatar ?? 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80' }}" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80'" class="w-5 h-5 rounded-full object-cover border border-amber-500">
+                <span class="truncate max-w-[50px]">{{ Auth::user()->name }}</span>
+            </a>
+            @else
+            <a href="{{ route('login') }}" class="flex flex-col items-center justify-center gap-0.5 {{ request()->routeIs('login') ? 'text-amber-600' : 'hover:text-amber-600' }}">
+                <i class="fas fa-user-circle text-lg"></i>
+                <span>Masuk</span>
+            </a>
+            @endauth
+        </div>
+    </nav>
 
     <!-- Footer -->
     <footer class="bg-white border-t border-amber-200/60 text-gray-600 mt-12 text-xs md:text-sm">
@@ -249,9 +312,9 @@
 
     @auth
     <!-- Floating User Chat Widget (Only for Logged-In Users) -->
-    <div x-data="userChatWidget()" class="fixed bottom-6 right-6 z-50">
+    <div x-data="userChatWidget()" @toggle-user-chat.window="toggleChat()" class="fixed bottom-20 right-4 md:bottom-6 md:right-6 z-50">
         <!-- Chat Toggle Button -->
-        <button @click="toggleChat()" class="relative bg-gradient-to-r from-amber-600 to-yellow-500 text-white w-14 h-14 rounded-full shadow-2xl flex items-center justify-center text-2xl hover:scale-105 transition duration-300">
+        <button @click="toggleChat()" class="relative bg-gradient-to-r from-amber-600 to-yellow-500 text-white w-12 h-12 md:w-14 md:h-14 rounded-full shadow-2xl flex items-center justify-center text-xl md:text-2xl hover:scale-105 transition duration-300">
             <i class="fas" :class="isOpen ? 'fa-xmark' : 'fa-headset'"></i>
             <span x-show="unreadCount > 0" x-cloak class="absolute -top-1 -right-1 bg-red-600 text-white font-bold text-[10px] w-5 h-5 rounded-full flex items-center justify-center border-2 border-white shadow animate-bounce" x-text="unreadCount"></span>
         </button>
@@ -262,7 +325,7 @@
              x-transition:enter="transition ease-out duration-300 transform"
              x-transition:enter-start="opacity-0 translate-y-4 scale-95"
              x-transition:enter-end="opacity-100 translate-y-0 scale-100"
-             class="absolute bottom-16 right-0 w-80 sm:w-96 bg-white rounded-2xl shadow-2xl border border-amber-200 overflow-hidden flex flex-col h-[460px]">
+             class="fixed inset-x-3 bottom-20 sm:bottom-16 sm:right-0 sm:left-auto w-auto sm:w-96 bg-white rounded-2xl shadow-2xl border border-amber-200 overflow-hidden flex flex-col h-[450px]">
             
             <!-- Chat Header -->
             <div class="bg-gradient-to-r from-amber-600 via-amber-500 to-yellow-500 p-4 text-white flex items-center justify-between shadow-sm">

@@ -30,55 +30,55 @@
     @endif
 
     <!-- Profile Overview Card -->
-    <div class="bg-gradient-to-r from-amber-600 via-amber-500 to-yellow-400 rounded-3xl p-6 md:p-8 text-white shadow-xl relative overflow-hidden">
-        <div class="relative z-10 flex flex-col sm:flex-row items-center gap-6">
+    <div class="bg-gradient-to-r from-amber-600 via-amber-500 to-yellow-400 rounded-3xl p-5 md:p-8 text-white shadow-xl relative overflow-hidden">
+        <div class="relative z-10 flex flex-col sm:flex-row items-center gap-4 md:gap-6">
             <img :src="selectedAvatar" 
                  onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80'"
                  alt="{{ $user->name }}" 
-                 class="w-24 h-24 rounded-full object-cover border-4 border-white/40 shadow-md shrink-0">
+                 class="w-20 h-20 md:w-24 md:h-24 rounded-full object-cover border-4 border-white/40 shadow-md shrink-0">
             
-            <div class="text-center sm:text-left space-y-1.5 flex-1">
-                <div class="flex items-center justify-center sm:justify-start gap-2">
-                    <h1 class="text-2xl font-black text-slate-950 tracking-tight">{{ $user->name }}</h1>
-                    <span class="bg-slate-900 text-amber-300 text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full shadow-xs">
+            <div class="text-center sm:text-left space-y-1 flex-1">
+                <div class="flex flex-wrap items-center justify-center sm:justify-start gap-2">
+                    <h1 class="text-xl md:text-2xl font-black text-slate-950 tracking-tight">{{ $user->name }}</h1>
+                    <span class="bg-slate-900 text-amber-300 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full shadow-xs">
                         Member Proats
                     </span>
                 </div>
-                <p class="text-xs text-slate-900 font-semibold flex items-center justify-center sm:justify-start gap-2">
+                <p class="text-[11px] md:text-xs text-slate-900 font-semibold flex flex-wrap items-center justify-center sm:justify-start gap-2">
                     <span><i class="fas fa-envelope"></i> {{ $user->email }}</span>
                     @if($user->phone)
-                        <span>&bull;</span>
+                        <span class="hidden sm:inline">&bull;</span>
                         <span><i class="fas fa-phone"></i> {{ $user->phone }}</span>
                     @endif
                 </p>
-                <p class="text-[11px] text-slate-800 font-medium">
+                <p class="text-[10px] md:text-[11px] text-slate-800 font-medium">
                     Bergabung sejak {{ $user->created_at ? $user->created_at->format('d M Y') : '2026' }}
                 </p>
             </div>
         </div>
 
         <div class="absolute -right-8 -bottom-8 opacity-15 pointer-events-none text-slate-900">
-            <i class="fas fa-user-gear text-[200px]"></i>
+            <i class="fas fa-user-gear text-[160px] md:text-[200px]"></i>
         </div>
     </div>
 
     <!-- Navigation Tabs -->
-    <div class="bg-white rounded-2xl p-2 shadow-xs border border-amber-100 flex gap-2 text-xs font-bold">
+    <div class="bg-white rounded-2xl p-1.5 md:p-2 shadow-xs border border-amber-100 flex overflow-x-auto no-scrollbar gap-1.5 text-xs font-bold">
         <button @click="activeTab = 'profile'" 
                 :class="activeTab === 'profile' ? 'bg-amber-600 text-white shadow-sm' : 'text-gray-600 hover:bg-amber-50 hover:text-amber-700'"
-                class="flex-1 py-3 px-4 rounded-xl transition flex items-center justify-center gap-2">
-            <i class="fas fa-user"></i> Informasi Akun
+                class="flex-1 min-w-[120px] py-2.5 px-3 md:py-3 md:px-4 rounded-xl transition flex items-center justify-center gap-1.5 shrink-0">
+            <i class="fas fa-user text-xs"></i> Informasi Akun
         </button>
         
         <button @click="activeTab = 'security'" 
                 :class="activeTab === 'security' ? 'bg-amber-600 text-white shadow-sm' : 'text-gray-600 hover:bg-amber-50 hover:text-amber-700'"
-                class="flex-1 py-3 px-4 rounded-xl transition flex items-center justify-center gap-2">
-            <i class="fas fa-key"></i> Ubah Password
+                class="flex-1 min-w-[120px] py-2.5 px-3 md:py-3 md:px-4 rounded-xl transition flex items-center justify-center gap-1.5 shrink-0">
+            <i class="fas fa-key text-xs"></i> Ubah Password
         </button>
 
         <button @click="activeTab = 'orders'" 
                 :class="activeTab === 'orders' ? 'bg-amber-600 text-white shadow-sm' : 'text-gray-600 hover:bg-amber-50 hover:text-amber-700'"
-                class="flex-1 py-3 px-4 rounded-xl transition flex items-center justify-center gap-2">
+                class="flex-1 min-w-[130px] py-2.5 px-3 md:py-3 md:px-4 rounded-xl transition flex items-center justify-center gap-1.5 shrink-0">
             <i class="fas fa-receipt"></i> Pesanan Saya ({{ count($orders) }})
         </button>
     </div>

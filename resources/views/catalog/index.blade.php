@@ -14,7 +14,7 @@
          x-transition:leave-start="translate-y-0 opacity-100"
          x-transition:leave-end="translate-y-4 opacity-0"
          x-cloak
-         class="fixed bottom-6 right-6 z-50 bg-slate-900/90 backdrop-blur text-white px-5 py-3 rounded-xl shadow-2xl flex items-center gap-3 border border-amber-500/30 text-sm">
+         class="fixed bottom-20 right-4 left-4 sm:left-auto sm:right-6 md:bottom-6 z-50 bg-slate-900/90 backdrop-blur text-white px-5 py-3 rounded-xl shadow-2xl flex items-center gap-3 border border-amber-500/30 text-sm">
         <div class="w-8 h-8 rounded-full bg-amber-500 text-white flex items-center justify-center shrink-0">
             <i class="fas fa-check"></i>
         </div>
@@ -56,7 +56,7 @@
          x-init="startAutoSlide()"
          @mouseenter="stopAutoSlide()"
          @mouseleave="startAutoSlide()"
-         class="relative rounded-2xl overflow-hidden shadow-xs border border-amber-300 min-h-[230px] md:min-h-[250px] bg-amber-400 text-slate-950">
+         class="relative rounded-2xl overflow-hidden shadow-xs border border-amber-300 min-h-[210px] md:min-h-[250px] bg-amber-400 text-slate-950">
         
         <!-- Slides Container -->
         @foreach($slides as $index => $slide)
@@ -69,7 +69,7 @@
              x-transition:leave-end="opacity-0"
              x-cloak
              :class="currentSlide === {{ $index }} ? 'z-20' : 'z-10'"
-             class="absolute inset-0 w-full h-full p-5 md:p-7 flex flex-col justify-between bg-gradient-to-r from-{{ $slide->bg_color_from ?? 'amber-400' }} via-yellow-400 to-{{ $slide->bg_color_to ?? 'amber-300' }} text-slate-950">
+             class="absolute inset-0 w-full h-full p-4 sm:p-5 md:p-7 flex flex-col justify-between bg-gradient-to-r from-{{ $slide->bg_color_from ?? 'amber-400' }} via-yellow-400 to-{{ $slide->bg_color_to ?? 'amber-300' }} text-slate-950">
             
             @if(!empty($slide->image_url))
                 <!-- Custom Background Image with Subtle Overlay -->
@@ -80,27 +80,27 @@
                 
                 <div class="z-10 max-w-xl text-white">
                     @if(!empty($slide->badge_text))
-                    <span class="inline-block px-3 py-1 bg-amber-400 text-slate-950 font-extrabold text-[11px] uppercase tracking-wider rounded-full mb-2 shadow-xs">
+                    <span class="inline-block px-2.5 py-0.5 md:px-3 md:py-1 bg-amber-400 text-slate-950 font-extrabold text-[10px] md:text-[11px] uppercase tracking-wider rounded-full mb-1.5 shadow-xs">
                         {{ $slide->badge_text }}
                     </span>
                     @endif
-                    <h1 class="text-xl md:text-3xl font-extrabold leading-tight tracking-tight mb-2 text-white">
+                    <h1 class="text-lg md:text-3xl font-extrabold leading-tight tracking-tight mb-1 md:mb-2 text-white">
                         {{ $slide->title }}
                     </h1>
                     @if(!empty($slide->subtitle))
-                    <p class="text-xs md:text-sm text-slate-200 font-semibold mb-3 drop-shadow-sm line-clamp-2">
+                    <p class="text-[11px] md:text-sm text-slate-200 font-semibold mb-2 md:mb-3 drop-shadow-sm line-clamp-2">
                         {{ $slide->subtitle }}
                     </p>
                     @endif
                 </div>
 
-                <div class="z-10 flex flex-wrap items-center gap-2">
+                <div class="z-10 flex flex-wrap items-center gap-1.5 md:gap-2">
                     @if(!empty($slide->button_text))
-                    <a href="{{ $slide->button_url ?? '#catalog-section' }}" class="px-4 py-2 bg-amber-400 hover:bg-amber-300 text-slate-950 font-extrabold text-xs md:text-sm rounded-xl transition shadow-md flex items-center gap-2">
-                        <i class="fas fa-drum text-slate-950"></i> {{ $slide->button_text }}
+                    <a href="{{ $slide->button_url ?? '#catalog-section' }}" class="px-3 py-1.5 md:px-4 md:py-2 bg-amber-400 hover:bg-amber-300 text-slate-950 font-extrabold text-xs md:text-sm rounded-xl transition shadow-md flex items-center gap-1.5">
+                        <i class="fas fa-drum text-slate-950 text-xs"></i> {{ $slide->button_text }}
                     </a>
                     @endif
-                    <span class="px-3 py-1.5 bg-slate-900/80 backdrop-blur rounded-xl text-amber-300 text-xs font-extrabold flex items-center gap-1.5 border border-slate-700 shadow-2xs">
+                    <span class="px-2.5 py-1 md:px-3 md:py-1.5 bg-slate-900/80 backdrop-blur rounded-xl text-amber-300 text-[10px] md:text-xs font-extrabold flex items-center gap-1 border border-slate-700 shadow-2xs">
                         <i class="fas fa-crown text-amber-400"></i> Katalog Resmi Proats
                     </span>
                 </div>
@@ -108,31 +108,31 @@
                 <!-- Styled Gradient Text Banner (Default) -->
                 <div class="z-10 max-w-xl">
                     @if(!empty($slide->badge_text))
-                    <span class="inline-block px-3 py-1 bg-slate-950 text-amber-300 font-extrabold text-[11px] uppercase tracking-wider rounded-full mb-2 shadow-xs">
+                    <span class="inline-block px-2.5 py-0.5 md:px-3 md:py-1 bg-slate-950 text-amber-300 font-extrabold text-[10px] md:text-[11px] uppercase tracking-wider rounded-full mb-1.5 shadow-xs">
                         {{ $slide->badge_text }}
                     </span>
                     @endif
-                    <h1 class="text-xl md:text-3xl font-extrabold leading-tight tracking-tight mb-2 text-slate-950">
+                    <h1 class="text-lg md:text-3xl font-extrabold leading-tight tracking-tight mb-1 md:mb-2 text-slate-950">
                         {{ $slide->title }}
                     </h1>
                     @if(!empty($slide->subtitle))
-                    <p class="text-xs md:text-sm text-slate-900 font-semibold mb-3 line-clamp-2">
+                    <p class="text-[11px] md:text-sm text-slate-900 font-semibold mb-2 md:mb-3 line-clamp-2">
                         {{ $slide->subtitle }}
                     </p>
                     @endif
                 </div>
-                <div class="z-10 flex flex-wrap items-center gap-2">
+                <div class="z-10 flex flex-wrap items-center gap-1.5 md:gap-2">
                     @if(!empty($slide->button_text))
-                    <a href="{{ $slide->button_url ?? '#catalog-section' }}" class="px-4 py-2 bg-slate-950 text-amber-300 font-extrabold text-xs md:text-sm rounded-xl hover:bg-black transition shadow-md flex items-center gap-2">
-                        <i class="fas fa-drum text-amber-400"></i> {{ $slide->button_text }}
+                    <a href="{{ $slide->button_url ?? '#catalog-section' }}" class="px-3 py-1.5 md:px-4 md:py-2 bg-slate-950 text-amber-300 font-extrabold text-xs md:text-sm rounded-xl hover:bg-black transition shadow-md flex items-center gap-1.5">
+                        <i class="fas fa-drum text-amber-400 text-xs"></i> {{ $slide->button_text }}
                     </a>
                     @endif
-                    <span class="px-3 py-1.5 bg-white/70 backdrop-blur rounded-xl text-slate-950 text-xs font-extrabold flex items-center gap-1.5 border border-white/70 shadow-2xs">
-                        <i class="fas fa-crown text-amber-700"></i> Katalog Resmi Toko Alat Musik Proats
+                    <span class="px-2.5 py-1 md:px-3 md:py-1.5 bg-white/70 backdrop-blur rounded-xl text-slate-950 text-[10px] md:text-xs font-extrabold flex items-center gap-1 border border-white/70 shadow-2xs">
+                        <i class="fas fa-crown text-amber-700"></i> Toko Musik Proats
                     </span>
                 </div>
                 <div class="absolute -right-10 -bottom-10 opacity-15 pointer-events-none text-slate-950 z-0">
-                    <i class="fas fa-music text-[200px]"></i>
+                    <i class="fas fa-music text-[160px] md:text-[200px]"></i>
                 </div>
             @endif
 
@@ -141,25 +141,30 @@
 
     </div>
 
-    <!-- Category Highlights Section -->
-    <div class="bg-white rounded-2xl shadow-xs border border-amber-100 p-4 md:p-6">
-        <h2 class="text-sm md:text-base font-bold text-gray-800 uppercase tracking-wider mb-4 flex items-center gap-2">
-            <i class="fas fa-th-large text-amber-600"></i> Kategori Instrumen Musik
-        </h2>
-        <div class="grid grid-cols-2 sm:grid-cols-6 gap-3 md:gap-4">
+    <!-- Category Highlights Section (Touch Horizontal Scroll on Mobile) -->
+    <div class="bg-white rounded-2xl shadow-xs border border-amber-100 p-3.5 md:p-6">
+        <div class="flex items-center justify-between mb-3">
+            <h2 class="text-xs md:text-base font-bold text-gray-800 uppercase tracking-wider flex items-center gap-2">
+                <i class="fas fa-th-large text-amber-600"></i> Kategori Instrumen Musik
+            </h2>
+            <span class="text-[10px] text-gray-400 sm:hidden flex items-center gap-1 font-semibold">
+                Geser <i class="fas fa-arrow-right text-[9px]"></i>
+            </span>
+        </div>
+        <div class="flex overflow-x-auto no-scrollbar gap-2.5 pb-1 sm:grid sm:grid-cols-3 lg:grid-cols-6 md:gap-4">
             <button @click="filterByCategory('all')" 
                     :class="selectedCategory === 'all' ? 'border-amber-500 bg-amber-50 text-amber-900 font-extrabold shadow-xs' : 'border-gray-100 hover:border-amber-300 text-gray-700'"
-                    class="flex flex-col items-center justify-center p-3 rounded-2xl border transition group text-center">
-                <div class="w-12 h-12 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center text-xl mb-2 group-hover:scale-110 transition border border-amber-200">
+                    class="min-w-[90px] sm:min-w-0 flex-shrink-0 flex flex-col items-center justify-center p-2.5 md:p-3 rounded-2xl border transition group text-center">
+                <div class="w-10 h-10 md:w-12 md:h-12 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center text-lg md:text-xl mb-1.5 group-hover:scale-110 transition border border-amber-200">
                     <i class="fas fa-globe"></i>
                 </div>
-                <span class="text-xs font-semibold line-clamp-1">Semua</span>
+                <span class="text-[11px] md:text-xs font-semibold line-clamp-1">Semua</span>
             </button>
             @foreach($categories as $cat)
             <button @click="filterByCategory('{{ $cat->slug }}')" 
                     :class="selectedCategory === '{{ $cat->slug }}' ? 'border-amber-500 bg-amber-50 text-amber-900 font-extrabold shadow-xs' : 'border-gray-100 hover:border-amber-300 text-gray-700'"
-                    class="flex flex-col items-center justify-center p-3 rounded-2xl border transition group text-center">
-                <div class="w-12 h-12 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center text-xl mb-2 group-hover:scale-110 transition border border-amber-200">
+                    class="min-w-[90px] sm:min-w-0 flex-shrink-0 flex flex-col items-center justify-center p-2.5 md:p-3 rounded-2xl border transition group text-center">
+                <div class="w-10 h-10 md:w-12 md:h-12 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center text-lg md:text-xl mb-1.5 group-hover:scale-110 transition border border-amber-200">
                     @if($cat->slug === 'marching-band-drumband')
                         <i class="fas fa-drum"></i>
                     @elseif($cat->slug === 'musik-tradisional')
@@ -174,7 +179,7 @@
                         <i class="fas fa-music"></i>
                     @endif
                 </div>
-                <span class="text-xs font-semibold line-clamp-1">{{ $cat->name }}</span>
+                <span class="text-[11px] md:text-xs font-semibold line-clamp-1">{{ $cat->name }}</span>
             </button>
             @endforeach
         </div>
@@ -183,8 +188,8 @@
     <!-- Main Catalog Section -->
     <div id="catalog-section" class="grid grid-cols-1 lg:grid-cols-4 gap-6 pt-2">
 
-        <!-- Sidebar Filter -->
-        <div class="lg:col-span-1">
+        <!-- Sidebar Filter (Desktop Only) -->
+        <div class="hidden lg:block lg:col-span-1">
             <div class="bg-white rounded-2xl shadow-xs border border-amber-100 p-5 sticky top-24 space-y-6">
                 <div class="flex items-center justify-between border-b border-gray-100 pb-3">
                     <h3 class="font-bold text-gray-900 text-sm flex items-center gap-2">
@@ -245,35 +250,126 @@
             </div>
         </div>
 
+        <!-- Mobile Filter Drawer Modal -->
+        <div x-show="showMobileFilter" 
+             x-cloak 
+             class="fixed inset-0 z-50 overflow-hidden bg-black/60 backdrop-blur-xs lg:hidden flex justify-end">
+            <div @click.away="showMobileFilter = false"
+                 x-show="showMobileFilter"
+                 x-transition:enter="transition ease-out duration-300 transform"
+                 x-transition:enter-start="translate-x-full"
+                 x-transition:enter-end="translate-x-0"
+                 x-transition:leave="transition ease-in duration-200 transform"
+                 x-transition:leave-start="translate-x-0"
+                 x-transition:leave-end="translate-x-full"
+                 class="w-full max-w-xs bg-white h-full shadow-2xl flex flex-col justify-between p-5 overflow-y-auto">
+                
+                <div class="space-y-6">
+                    <div class="flex items-center justify-between border-b border-gray-100 pb-3">
+                        <h3 class="font-extrabold text-gray-900 text-sm flex items-center gap-2">
+                            <i class="fas fa-filter text-amber-600"></i> FILTER PRODUK
+                        </h3>
+                        <button @click="showMobileFilter = false" class="text-gray-500 hover:text-slate-900">
+                            <i class="fas fa-xmark text-lg"></i>
+                        </button>
+                    </div>
+
+                    <!-- Filter Category -->
+                    <div>
+                        <h4 class="text-xs font-bold text-gray-700 uppercase tracking-wider mb-2.5">Kategori</h4>
+                        <div class="space-y-1 text-xs font-medium">
+                            <label class="flex items-center gap-2 cursor-pointer p-2 rounded-lg hover:bg-amber-50">
+                                <input type="radio" name="cat_mob" value="all" x-model="selectedCategory" class="text-amber-600 focus:ring-amber-500">
+                                <span>Semua Kategori</span>
+                            </label>
+                            @foreach($categories as $cat)
+                            <label class="flex items-center justify-between cursor-pointer p-2 rounded-lg hover:bg-amber-50">
+                                <div class="flex items-center gap-2">
+                                    <input type="radio" name="cat_mob" value="{{ $cat->slug }}" x-model="selectedCategory" class="text-amber-600 focus:ring-amber-500">
+                                    <span class="text-gray-700">{{ $cat->name }}</span>
+                                </div>
+                                <span class="text-[10px] text-gray-400 bg-gray-100 px-1.5 py-0.5 rounded-full">({{ $cat->products_count }})</span>
+                            </label>
+                            @endforeach
+                        </div>
+                    </div>
+
+                    <!-- Filter Rating -->
+                    <div class="border-t border-gray-100 pt-4">
+                        <h4 class="text-xs font-bold text-gray-700 uppercase tracking-wider mb-2.5">Bintang Rating</h4>
+                        <div class="space-y-1 text-xs">
+                            <template x-for="stars in [5, 4, 3]" :key="stars">
+                                <label class="flex items-center gap-2 cursor-pointer p-1.5 rounded-lg hover:bg-amber-50">
+                                    <input type="radio" name="rating_filter_mob" :value="stars" x-model="ratingFilter" class="text-amber-600 focus:ring-amber-500">
+                                    <div class="flex items-center text-amber-500 text-xs">
+                                        <template x-for="i in stars"><i class="fas fa-star"></i></template>
+                                        <span class="ml-1.5 text-gray-600 font-semibold" x-text="stars + ' Bintang & Ke atas'"></span>
+                                    </div>
+                                </label>
+                            </template>
+                        </div>
+                    </div>
+
+                    <!-- Filter Price Range -->
+                    <div class="border-t border-gray-100 pt-4">
+                        <h4 class="text-xs font-bold text-gray-700 uppercase tracking-wider mb-2.5">Batas Harga (Rp)</h4>
+                        <div class="grid grid-cols-2 gap-2 mb-3">
+                            <input type="number" x-model="minPrice" placeholder="MIN" class="w-full p-2.5 border border-gray-200 rounded-xl text-xs focus:ring-amber-500">
+                            <input type="number" x-model="maxPrice" placeholder="MAX" class="w-full p-2.5 border border-gray-200 rounded-xl text-xs focus:ring-amber-500">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pt-4 border-t border-gray-100 space-y-2">
+                    <button @click="applyFilters(); showMobileFilter = false;" class="w-full py-3 bg-amber-500 hover:bg-amber-600 text-slate-950 text-xs font-extrabold rounded-xl transition shadow-md">
+                        Terapkan Filter
+                    </button>
+                    <button @click="resetFilters(); showMobileFilter = false;" class="w-full py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-bold rounded-xl transition">
+                        Reset Semua Filter
+                    </button>
+                </div>
+            </div>
+        </div>
+
         <!-- Products Grid & Sort Controls -->
         <div class="lg:col-span-3 space-y-4">
 
-            <!-- Sorting Bar -->
-            <div class="bg-white rounded-2xl shadow-xs border border-amber-100 p-3 md:p-4 flex flex-wrap items-center justify-between gap-3 text-xs">
-                <div class="flex flex-wrap items-center gap-2">
-                    <span class="text-gray-500 font-semibold">Urutkan:</span>
-                    <button @click="setSort('popular')" 
-                            :class="sort === 'popular' ? 'bg-amber-500 text-slate-950 font-extrabold shadow-xs' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'"
-                            class="px-3.5 py-1.5 rounded-xl font-bold transition">
-                        Terlaris
+            <!-- Sorting Bar (With Mobile Filter Trigger Button) -->
+            <div class="bg-white rounded-2xl shadow-xs border border-amber-100 p-2.5 md:p-4 flex flex-wrap items-center justify-between gap-2 text-xs">
+                <div class="flex items-center gap-2">
+                    <!-- Mobile Filter Trigger -->
+                    <button @click="showMobileFilter = true" class="lg:hidden px-3 py-1.5 bg-amber-500 text-slate-950 font-extrabold rounded-xl flex items-center gap-1.5 shadow-2xs">
+                        <i class="fas fa-sliders text-xs"></i>
+                        <span>Filter</span>
                     </button>
-                    <button @click="setSort('latest')" 
-                            :class="sort === 'latest' ? 'bg-amber-500 text-slate-950 font-extrabold shadow-xs' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'"
-                            class="px-3.5 py-1.5 rounded-xl font-bold transition">
-                        Terbaru
-                    </button>
-                    <button @click="setSort('discount')" 
-                            :class="sort === 'discount' ? 'bg-amber-500 text-slate-950 font-extrabold shadow-xs' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'"
-                            class="px-3.5 py-1.5 rounded-xl font-bold transition">
-                        Diskon Terbesar
-                    </button>
+
+                    <div class="hidden sm:flex items-center gap-2">
+                        <span class="text-gray-500 font-semibold">Urutkan:</span>
+                        <button @click="setSort('popular')" 
+                                :class="sort === 'popular' ? 'bg-amber-500 text-slate-950 font-extrabold shadow-xs' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'"
+                                class="px-3.5 py-1.5 rounded-xl font-bold transition">
+                            Terlaris
+                        </button>
+                        <button @click="setSort('latest')" 
+                                :class="sort === 'latest' ? 'bg-amber-500 text-slate-950 font-extrabold shadow-xs' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'"
+                                class="px-3.5 py-1.5 rounded-xl font-bold transition">
+                            Terbaru
+                        </button>
+                        <button @click="setSort('discount')" 
+                                :class="sort === 'discount' ? 'bg-amber-500 text-slate-950 font-extrabold shadow-xs' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'"
+                                class="px-3.5 py-1.5 rounded-xl font-bold transition">
+                            Diskon
+                        </button>
+                    </div>
                 </div>
 
                 <div class="flex items-center gap-2">
-                    <select x-model="sort" @change="applyFilters()" class="bg-gray-100 border-none text-xs font-bold text-gray-700 rounded-xl px-3 py-1.5 focus:ring-amber-500">
+                    <select x-model="sort" @change="applyFilters()" class="bg-gray-100 border-none text-[11px] md:text-xs font-bold text-gray-700 rounded-xl px-2.5 py-1.5 focus:ring-amber-500">
                         <option value="popular">Terpopular</option>
-                        <option value="price_asc">Harga: Rendah ke Tinggi</option>
-                        <option value="price_desc">Harga: Tinggi ke Rendah</option>
+                        <option value="latest">Terbaru</option>
+                        <option value="discount">Diskon Terbesar</option>
+                        <option value="price_asc">Harga: Low to High</option>
+                        <option value="price_desc">Harga: High to Low</option>
                     </select>
                 </div>
             </div>
@@ -359,20 +455,23 @@
     <!-- Product Detail Modal -->
     <div x-show="detailModal.show" 
          x-cloak 
-         class="fixed inset-0 z-50 overflow-hidden bg-black/60 backdrop-blur-sm flex items-center justify-center p-3 md:p-6">
+         class="fixed inset-0 z-50 overflow-hidden bg-black/60 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4 md:p-6">
         <div @click.away="detailModal.show = false"
              x-show="detailModal.show"
              x-transition:enter="transition ease-out duration-300 transform"
-             x-transition:enter-start="scale-95 opacity-0"
-             x-transition:enter-end="scale-100 opacity-100"
-             class="bg-white rounded-2xl max-w-3xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden relative border border-gray-100">
+             x-transition:enter-start="translate-y-full sm:translate-y-0 sm:scale-95 opacity-0"
+             x-transition:enter-end="translate-y-0 sm:scale-100 opacity-100"
+             x-transition:leave="transition ease-in duration-200 transform"
+             x-transition:leave-start="translate-y-0 sm:scale-100 opacity-100"
+             x-transition:leave-end="translate-y-full sm:translate-y-0 sm:scale-95 opacity-0"
+             class="bg-white rounded-t-3xl sm:rounded-2xl max-w-3xl w-full max-h-[88vh] sm:max-h-[90vh] flex flex-col shadow-2xl overflow-hidden relative border border-gray-100">
             
-            <button @click="detailModal.show = false" class="absolute top-3 right-3 z-20 w-9 h-9 rounded-full bg-white/90 shadow-md hover:bg-gray-100 text-gray-700 flex items-center justify-center transition border border-gray-200">
-                <i class="fas fa-xmark text-lg"></i>
+            <button @click="detailModal.show = false" class="absolute top-3 right-3 z-30 w-8 h-8 md:w-9 md:h-9 rounded-full bg-white/90 shadow-md hover:bg-gray-100 text-gray-700 flex items-center justify-center transition border border-gray-200">
+                <i class="fas fa-xmark text-base md:text-lg"></i>
             </button>
 
             <template x-if="detailModal.product">
-                <div class="overflow-y-auto max-h-[90vh] p-4 md:p-6 space-y-4">
+                <div class="overflow-y-auto max-h-[88vh] p-4 md:p-6 space-y-4">
                     
                     <!-- Top Info: Compact Photo + Main Details -->
                     <div class="flex flex-col sm:flex-row gap-5 items-start">
@@ -840,6 +939,7 @@
             isLoggedIn: {{ Auth::check() ? 'true' : 'false' }},
             requireLoginModal: false,
             cartDrawerOpen: false,
+            showMobileFilter: false,
             checkoutModal: false,
             voucherCode: '',
 

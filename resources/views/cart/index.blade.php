@@ -6,66 +6,66 @@
 <div x-data="cartPageApp()" class="max-w-4xl mx-auto space-y-6 my-4">
 
     <!-- Page Title Header -->
-    <div class="bg-white rounded-2xl p-6 border border-amber-100 shadow-sm flex items-center justify-between">
+    <div class="bg-white rounded-2xl p-4 md:p-6 border border-amber-100 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
         <div class="flex items-center gap-3">
-            <div class="w-12 h-12 bg-amber-100 text-amber-700 rounded-2xl flex items-center justify-center text-2xl shadow-xs">
+            <div class="w-10 h-10 md:w-12 md:h-12 bg-amber-100 text-amber-700 rounded-2xl flex items-center justify-center text-xl md:text-2xl shadow-xs shrink-0">
                 <i class="fas fa-shopping-bag"></i>
             </div>
             <div>
-                <h1 class="text-xl md:text-2xl font-extrabold text-gray-900 tracking-tight">Keranjang Belanja Anda</h1>
+                <h1 class="text-lg md:text-2xl font-extrabold text-gray-900 tracking-tight">Keranjang Belanja Anda</h1>
                 <p class="text-xs text-gray-500 font-medium">Periksa kembali item pilihanmu sebelum checkout.</p>
             </div>
         </div>
         
-        <a href="{{ route('catalog.index') }}" class="px-4 py-2 bg-amber-50 text-amber-700 font-bold text-xs rounded-xl hover:bg-amber-100 transition flex items-center gap-1.5 border border-amber-200">
+        <a href="{{ route('catalog.index') }}" class="px-3.5 py-1.5 md:px-4 md:py-2 bg-amber-50 text-amber-700 font-bold text-xs rounded-xl hover:bg-amber-100 transition flex items-center gap-1.5 border border-amber-200 shrink-0">
             <i class="fas fa-arrow-left"></i> Lanjut Belanja
         </a>
     </div>
 
     <!-- Empty State -->
-    <div x-show="$store.cart.items.length === 0" class="bg-white rounded-2xl p-12 text-center shadow-sm border border-amber-100">
-        <div class="w-20 h-20 bg-amber-100 text-amber-700 rounded-full flex items-center justify-center mx-auto text-3xl mb-4">
+    <div x-show="$store.cart.items.length === 0" class="bg-white rounded-2xl p-8 md:p-12 text-center shadow-sm border border-amber-100">
+        <div class="w-16 h-16 md:w-20 md:h-20 bg-amber-100 text-amber-700 rounded-full flex items-center justify-center mx-auto text-2xl md:text-3xl mb-4">
             <i class="fas fa-cart-arrow-down"></i>
         </div>
-        <h3 class="text-lg font-bold text-gray-800 mb-1">Keranjang Kamu Masih Kosong</h3>
+        <h3 class="text-base md:text-lg font-bold text-gray-800 mb-1">Keranjang Kamu Masih Kosong</h3>
         <p class="text-xs text-gray-400 mb-6">Yuk temukan berbagai produk menarik di katalog Proats!</p>
-        <a href="{{ route('catalog.index') }}" class="px-6 py-3 bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs rounded-xl shadow-lg transition inline-flex items-center gap-2">
+        <a href="{{ route('catalog.index') }}" class="px-5 py-2.5 md:px-6 md:py-3 bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs rounded-xl shadow-lg transition inline-flex items-center gap-2">
             <i class="fas fa-magnifying-glass"></i> Jelajahi Katalog Sekarang
         </a>
     </div>
 
     <!-- Cart Table & Order Summary Grid -->
-    <div x-show="$store.cart.items.length > 0" class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <div x-show="$store.cart.items.length > 0" class="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
 
         <!-- Cart Items List (Left Column) -->
         <div class="lg:col-span-2 space-y-4">
             <div class="bg-white rounded-2xl shadow-sm border border-amber-100 overflow-hidden">
-                <div class="p-4 bg-gray-50 border-b border-gray-100 flex items-center justify-between text-xs font-bold text-gray-700">
+                <div class="p-3.5 md:p-4 bg-gray-50 border-b border-gray-100 flex items-center justify-between text-xs font-bold text-gray-700">
                     <span>Daftar Produk (<span x-text="$store.cart.count()"></span> item)</span>
                     <button @click="$store.cart.clear()" class="text-red-500 hover:underline font-semibold flex items-center gap-1">
                         <i class="fas fa-trash-can"></i> Kosongkan Keranjang
                     </button>
                 </div>
 
-                <div class="p-4 space-y-4 divide-y divide-gray-100">
+                <div class="p-3.5 md:p-4 space-y-4 divide-y divide-gray-100">
                     <template x-for="(item, index) in $store.cart.items" :key="index">
-                        <div class="pt-4 first:pt-0 flex flex-wrap sm:flex-nowrap items-center gap-4">
-                            <img :src="item.image_url" :alt="item.name" class="w-20 h-20 object-cover rounded-xl border border-gray-100 shrink-0">
+                        <div class="pt-4 first:pt-0 flex flex-wrap sm:flex-nowrap items-start sm:items-center gap-3 sm:gap-4">
+                            <img :src="item.image_url" :alt="item.name" class="w-16 h-16 sm:w-20 sm:h-20 object-cover rounded-xl border border-gray-100 shrink-0">
                             
                             <div class="flex-grow min-w-0">
-                                <h3 class="text-sm font-bold text-gray-800 line-clamp-1" x-text="item.name"></h3>
+                                <h3 class="text-xs sm:text-sm font-bold text-gray-800 line-clamp-2" x-text="item.name"></h3>
                                 <template x-if="item.variant">
-                                    <span class="inline-block mt-1 text-[11px] bg-amber-50 text-amber-800 border border-amber-200 px-2 py-0.5 rounded-md font-semibold" x-text="'Varian: ' + item.variant"></span>
+                                    <span class="inline-block mt-1 text-[10px] sm:text-[11px] bg-amber-50 text-amber-800 border border-amber-200 px-2 py-0.5 rounded-md font-semibold" x-text="'Varian: ' + item.variant"></span>
                                 </template>
-                                <div class="text-amber-700 font-extrabold text-sm mt-1" x-text="formatRp(item.price)"></div>
+                                <div class="text-amber-700 font-extrabold text-xs sm:text-sm mt-1" x-text="formatRp(item.price)"></div>
                             </div>
 
                             <!-- Quantity Selector -->
-                            <div class="flex items-center gap-3">
+                            <div class="flex items-center justify-between sm:justify-start w-full sm:w-auto gap-3 pt-2 sm:pt-0 border-t sm:border-t-0 border-gray-100">
                                 <div class="flex items-center border border-gray-200 rounded-xl overflow-hidden text-xs">
-                                    <button @click="$store.cart.updateQty(index, item.qty - 1)" class="px-3 py-1.5 bg-gray-50 hover:bg-gray-100 font-bold text-gray-600">-</button>
-                                    <span class="px-4 font-bold text-gray-800" x-text="item.qty"></span>
-                                    <button @click="$store.cart.updateQty(index, item.qty + 1)" class="px-3 py-1.5 bg-gray-50 hover:bg-gray-100 font-bold text-gray-600">+</button>
+                                    <button @click="$store.cart.updateQty(index, item.qty - 1)" class="px-2.5 py-1 sm:px-3 sm:py-1.5 bg-gray-50 hover:bg-gray-100 font-bold text-gray-600">-</button>
+                                    <span class="px-3 font-bold text-gray-800" x-text="item.qty"></span>
+                                    <button @click="$store.cart.updateQty(index, item.qty + 1)" class="px-2.5 py-1 sm:px-3 sm:py-1.5 bg-gray-50 hover:bg-gray-100 font-bold text-gray-600">+</button>
                                 </div>
                                 <button @click="$store.cart.removeItem(index)" class="p-2 text-gray-400 hover:text-red-600 text-sm transition" title="Hapus item">
                                     <i class="fas fa-trash-can"></i>
