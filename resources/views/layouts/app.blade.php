@@ -6,6 +6,9 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'E-Catalog - Tempat Belanja Online Termurah')</title>
 
+    <!-- Favicon / Tab Icon -->
+    <link rel="icon" type="image/png" href="{{ asset('assets/images/logo.png') }}">
+
     <!-- Google Fonts: Outfit & Plus Jakarta Sans -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

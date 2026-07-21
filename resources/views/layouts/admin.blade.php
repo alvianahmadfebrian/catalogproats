@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Proats Admin CMS')</title>
+
+    <!-- Favicon / Tab Icon -->
+    <link rel="icon" type="image/png" href="{{ asset('assets/images/logo.png') }}">
+
     <!-- Google Fonts: Outfit & Plus Jakarta Sans -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
