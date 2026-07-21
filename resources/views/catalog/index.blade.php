@@ -21,30 +21,124 @@
         <span x-text="toast.message" class="font-medium"></span>
     </div>
 
-    <!-- Hero Banner (Bright Gold & Light Theme) -->
-    <div class="relative rounded-2xl overflow-hidden shadow-xs bg-gradient-to-r from-amber-400 via-yellow-400 to-amber-300 text-slate-950 p-6 md:p-8 flex flex-col justify-between min-h-[200px] border border-amber-300">
-        <div class="z-10 max-w-xl">
-            <span class="inline-block px-3 py-1 bg-slate-950 text-amber-300 font-extrabold text-xs uppercase tracking-wider rounded-full mb-3 shadow-xs">
-                PROMO EKSKLUSIF ALAT MUSIK
-            </span>
-            <h1 class="text-2xl md:text-4xl font-extrabold leading-tight tracking-tight mb-2 text-slate-950">
-                Pusat Alat Musik <span class="text-amber-900">Marching Band, Tradisional & Band</span>
-            </h1>
-            <p class="text-xs md:text-sm text-slate-900 font-semibold mb-4">
-                Melayani pemesanan drumband, marching band HTS, instrumen etnik tradisional, hingga peralatan band profesional.
-            </p>
+    <!-- Hero Banner Auto-Slide Carousel (No Cut Off, Solid Layering, Smooth Auto Slide) -->
+    @php
+        $slides = isset($banners) && count($banners) > 0 ? $banners : [
+            (object)[
+                'badge_text' => 'PROMO EKSKLUSIF ALAT MUSIK',
+                'title' => 'Pusat Alat Musik Marching Band, Tradisional & Band',
+                'subtitle' => 'Melayani pemesanan drumband, marching band HTS, instrumen etnik tradisional, hingga peralatan band profesional.',
+                'button_text' => 'Jelajahi Instrumen',
+                'button_url' => '#catalog-section',
+                'image_url' => null,
+                'bg_color_from' => 'amber-400',
+                'bg_color_to' => 'amber-300'
+            ]
+        ];
+    @endphp
+
+    <div x-data="{
+            currentSlide: 0,
+            totalSlides: {{ count($slides) }},
+            timer: null,
+            startAutoSlide() {
+                this.stopAutoSlide();
+                if (this.totalSlides > 1) {
+                    this.timer = setInterval(() => {
+                        this.currentSlide = (this.currentSlide + 1) % this.totalSlides;
+                    }, 4500);
+                }
+            },
+            stopAutoSlide() {
+                if (this.timer) clearInterval(this.timer);
+            }
+         }"
+         x-init="startAutoSlide()"
+         @mouseenter="stopAutoSlide()"
+         @mouseleave="startAutoSlide()"
+         class="relative rounded-2xl overflow-hidden shadow-xs border border-amber-300 min-h-[230px] md:min-h-[250px] bg-amber-400 text-slate-950">
+        
+        <!-- Slides Container -->
+        @foreach($slides as $index => $slide)
+        <div x-show="currentSlide === {{ $index }}"
+             x-transition:enter="transition opacity ease-out duration-600"
+             x-transition:enter-start="opacity-0"
+             x-transition:enter-end="opacity-100"
+             x-transition:leave="transition opacity ease-in duration-300"
+             x-transition:leave-start="opacity-100"
+             x-transition:leave-end="opacity-0"
+             x-cloak
+             :class="currentSlide === {{ $index }} ? 'z-20' : 'z-10'"
+             class="absolute inset-0 w-full h-full p-5 md:p-7 flex flex-col justify-between bg-gradient-to-r from-{{ $slide->bg_color_from ?? 'amber-400' }} via-yellow-400 to-{{ $slide->bg_color_to ?? 'amber-300' }} text-slate-950">
+            
+            @if(!empty($slide->image_url))
+                <!-- Custom Background Image with Subtle Overlay -->
+                <div class="absolute inset-0 z-0">
+                    <img src="{{ $slide->image_url }}" alt="{{ $slide->title }}" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-r from-slate-950/90 via-slate-950/60 to-slate-950/20"></div>
+                </div>
+                
+                <div class="z-10 max-w-xl text-white">
+                    @if(!empty($slide->badge_text))
+                    <span class="inline-block px-3 py-1 bg-amber-400 text-slate-950 font-extrabold text-[11px] uppercase tracking-wider rounded-full mb-2 shadow-xs">
+                        {{ $slide->badge_text }}
+                    </span>
+                    @endif
+                    <h1 class="text-xl md:text-3xl font-extrabold leading-tight tracking-tight mb-2 text-white">
+                        {{ $slide->title }}
+                    </h1>
+                    @if(!empty($slide->subtitle))
+                    <p class="text-xs md:text-sm text-slate-200 font-semibold mb-3 drop-shadow-sm line-clamp-2">
+                        {{ $slide->subtitle }}
+                    </p>
+                    @endif
+                </div>
+
+                <div class="z-10 flex flex-wrap items-center gap-2">
+                    @if(!empty($slide->button_text))
+                    <a href="{{ $slide->button_url ?? '#catalog-section' }}" class="px-4 py-2 bg-amber-400 hover:bg-amber-300 text-slate-950 font-extrabold text-xs md:text-sm rounded-xl transition shadow-md flex items-center gap-2">
+                        <i class="fas fa-drum text-slate-950"></i> {{ $slide->button_text }}
+                    </a>
+                    @endif
+                    <span class="px-3 py-1.5 bg-slate-900/80 backdrop-blur rounded-xl text-amber-300 text-xs font-extrabold flex items-center gap-1.5 border border-slate-700 shadow-2xs">
+                        <i class="fas fa-crown text-amber-400"></i> Katalog Resmi Proats
+                    </span>
+                </div>
+            @else
+                <!-- Styled Gradient Text Banner (Default) -->
+                <div class="z-10 max-w-xl">
+                    @if(!empty($slide->badge_text))
+                    <span class="inline-block px-3 py-1 bg-slate-950 text-amber-300 font-extrabold text-[11px] uppercase tracking-wider rounded-full mb-2 shadow-xs">
+                        {{ $slide->badge_text }}
+                    </span>
+                    @endif
+                    <h1 class="text-xl md:text-3xl font-extrabold leading-tight tracking-tight mb-2 text-slate-950">
+                        {{ $slide->title }}
+                    </h1>
+                    @if(!empty($slide->subtitle))
+                    <p class="text-xs md:text-sm text-slate-900 font-semibold mb-3 line-clamp-2">
+                        {{ $slide->subtitle }}
+                    </p>
+                    @endif
+                </div>
+                <div class="z-10 flex flex-wrap items-center gap-2">
+                    @if(!empty($slide->button_text))
+                    <a href="{{ $slide->button_url ?? '#catalog-section' }}" class="px-4 py-2 bg-slate-950 text-amber-300 font-extrabold text-xs md:text-sm rounded-xl hover:bg-black transition shadow-md flex items-center gap-2">
+                        <i class="fas fa-drum text-amber-400"></i> {{ $slide->button_text }}
+                    </a>
+                    @endif
+                    <span class="px-3 py-1.5 bg-white/70 backdrop-blur rounded-xl text-slate-950 text-xs font-extrabold flex items-center gap-1.5 border border-white/70 shadow-2xs">
+                        <i class="fas fa-crown text-amber-700"></i> Katalog Resmi Toko Alat Musik Proats
+                    </span>
+                </div>
+                <div class="absolute -right-10 -bottom-10 opacity-15 pointer-events-none text-slate-950 z-0">
+                    <i class="fas fa-music text-[200px]"></i>
+                </div>
+            @endif
+
         </div>
-        <div class="z-10 flex flex-wrap gap-2">
-            <a href="#catalog-section" class="px-5 py-2.5 bg-slate-950 text-amber-300 font-extrabold text-xs md:text-sm rounded-xl hover:bg-black transition shadow-md flex items-center gap-2">
-                <i class="fas fa-drum text-amber-400"></i> Jelajahi Instrumen
-            </a>
-            <span class="px-3 py-2 bg-white/60 backdrop-blur rounded-xl text-slate-950 text-xs font-extrabold flex items-center gap-1.5 border border-white/60 shadow-2xs">
-                <i class="fas fa-crown text-amber-700"></i> Katalog Resmi Toko Alat Musik Proats
-            </span>
-        </div>
-        <div class="absolute -right-10 -bottom-10 opacity-15 pointer-events-none text-slate-950">
-            <i class="fas fa-music text-[220px]"></i>
-        </div>
+        @endforeach
+
     </div>
 
     <!-- Category Highlights Section -->

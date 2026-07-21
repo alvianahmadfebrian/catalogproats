@@ -17,6 +17,9 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        // Seed Banners
+        $this->call(BannerSeeder::class);
+
         // Seed Admin User
         User::create([
             'name' => 'Master Vian',

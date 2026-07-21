@@ -63,6 +63,10 @@ Route::middleware(['auth'])->prefix('cms-admin')->name('admin.')->group(function
     Route::get('/reviews', [\App\Http\Controllers\Admin\AdminReviewController::class, 'index'])->name('reviews.index');
     Route::delete('/reviews/{review}', [\App\Http\Controllers\Admin\AdminReviewController::class, 'destroy'])->name('reviews.destroy');
 
+    // Admin Banners Management
+    Route::resource('banners', \App\Http\Controllers\Admin\AdminBannerController::class);
+    Route::post('/banners/{id}/toggle', [\App\Http\Controllers\Admin\AdminBannerController::class, 'toggleStatus'])->name('banners.toggle');
+
     // Admin Settings Routes
     Route::get('/settings', [\App\Http\Controllers\Admin\AdminSettingsController::class, 'index'])->name('settings.index');
     Route::post('/settings', [\App\Http\Controllers\Admin\AdminSettingsController::class, 'update'])->name('settings.update');

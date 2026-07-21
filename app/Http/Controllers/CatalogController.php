@@ -110,9 +110,12 @@ class CatalogController extends Controller
             ]);
         }
 
+        $banners = \App\Models\Banner::active()->ordered()->get();
+
         return view('catalog.index', compact(
             'categories',
-            'products'
+            'products',
+            'banners'
         ));
     }
 

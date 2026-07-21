@@ -113,6 +113,10 @@
                     <div class="px-3 text-[10px] font-extrabold text-amber-700/80 uppercase tracking-widest">
                         PENGATURAN SISTEM
                     </div>
+                    <a href="{{ route('admin.banners.index') }}" 
+                       class="flex items-center gap-3 px-3 py-2 rounded-xl transition {{ request()->routeIs('admin.banners.*') ? 'bg-amber-500 text-slate-950 font-extrabold shadow-xs' : 'text-gray-600 hover:bg-amber-50 hover:text-amber-700' }}">
+                        <i class="fas fa-images w-4 text-center"></i> Hero Banner Slider
+                    </a>
                     <a href="{{ route('admin.settings.index') }}" 
                        class="flex items-center gap-3 px-3 py-2 rounded-xl transition {{ request()->routeIs('admin.settings.*') ? 'bg-amber-500 text-slate-950 font-extrabold shadow-xs' : 'text-gray-600 hover:bg-amber-50 hover:text-amber-700' }}">
                         <i class="fas fa-sliders w-4 text-center"></i> Pengaturan Keseluruhan
