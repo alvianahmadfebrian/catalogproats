@@ -29,6 +29,19 @@ class AdminSettingsController extends Controller
             'social_facebook' => Setting::get('social_facebook', 'https://www.facebook.com/pro.ats.5'),
             'social_instagram' => Setting::get('social_instagram', 'https://www.instagram.com/proats.marchingproduct?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=='),
             'social_tiktok' => Setting::get('social_tiktok', 'https://www.tiktok.com/@proats'),
+
+            // 2 Stacked Right Promo Banners
+            'promo_banner_1_badge' => Setting::get('promo_banner_1_badge', 'PROATSPAY DISKON'),
+            'promo_banner_1_title' => Setting::get('promo_banner_1_title', 'Marching Band & Drumband'),
+            'promo_banner_1_subtitle' => Setting::get('promo_banner_1_subtitle', '100% Produk Original Garansi Resmi'),
+            'promo_banner_1_link' => Setting::get('promo_banner_1_link', '?category=marching-band-drumband'),
+            'promo_banner_1_image' => Setting::get('promo_banner_1_image', 'https://images.unsplash.com/photo-1511192336575-5a79af67a629?auto=format&fit=crop&w=600&q=80'),
+
+            'promo_banner_2_badge' => Setting::get('promo_banner_2_badge', 'PILIHAN LOKAL'),
+            'promo_banner_2_title' => Setting::get('promo_banner_2_title', 'Peralatan Band Lengkap'),
+            'promo_banner_2_subtitle' => Setting::get('promo_banner_2_subtitle', 'Gitar, Keyboard, Drum & Bass'),
+            'promo_banner_2_link' => Setting::get('promo_banner_2_link', '?category=alat-musik-band'),
+            'promo_banner_2_image' => Setting::get('promo_banner_2_image', 'https://images.unsplash.com/photo-1510915361894-db8b60106cb1?auto=format&fit=crop&w=600&q=80'),
         ];
 
         $admin = Auth::user();
@@ -38,7 +51,33 @@ class AdminSettingsController extends Controller
 
     public function update(Request $request)
     {
-        $inputs = $request->except(['_token', 'admin_username', 'admin_password', 'admin_password_confirmation']);
+        $inputs = $request->except(['_token', 'admin_username', 'admin_password', 'admin_password_confirmation', 'promo_banner_1_file', 'promo_banner_2_file']);
+
+        // Handle Banner 1 File Upload
+        if ($request->hasFile('promo_banner_1_file')) {
+            $file = $request->file('promo_banner_1_file');
+            $fileName = 'promo_banner_1_' . time() . '.' . $file->getClientOriginalExtension();
+            
+            if (!file_exists(public_path('uploads/banners'))) {
+                mkdir(public_path('uploads/banners'), 0755, true);
+            }
+            
+            $file->move(public_path('uploads/banners'), $fileName);
+            Setting::set('promo_banner_1_image', '/uploads/banners/' . $fileName);
+        }
+
+        // Handle Banner 2 File Upload
+        if ($request->hasFile('promo_banner_2_file')) {
+            $file = $request->file('promo_banner_2_file');
+            $fileName = 'promo_banner_2_' . time() . '.' . $file->getClientOriginalExtension();
+            
+            if (!file_exists(public_path('uploads/banners'))) {
+                mkdir(public_path('uploads/banners'), 0755, true);
+            }
+            
+            $file->move(public_path('uploads/banners'), $fileName);
+            Setting::set('promo_banner_2_image', '/uploads/banners/' . $fileName);
+        }
 
         foreach ($inputs as $key => $val) {
             Setting::set($key, $val);

@@ -156,22 +156,35 @@
         </div>
 
         <!-- Right: 2 Stacked Static Promo Banners -->
+        @php
+            $banner1Link = \App\Models\Setting::get('promo_banner_1_link', '?category=marching-band-drumband');
+            $banner1Category = str_starts_with($banner1Link, '?category=') ? str_replace('?category=', '', $banner1Link) : '';
+            
+            $banner2Link = \App\Models\Setting::get('promo_banner_2_link', '?category=alat-musik-band');
+            $banner2Category = str_starts_with($banner2Link, '?category=') ? str_replace('?category=', '', $banner2Link) : '';
+        @endphp
         <div class="grid grid-cols-2 md:grid-cols-1 md:col-span-1 gap-3 md:gap-4 md:h-[320px]">
             <!-- Promo Card 1 -->
-            <a href="#catalog-section" @click.prevent="filterByCategory('marching-band-drumband')" class="relative h-[110px] sm:h-[130px] md:h-[152px] rounded-2xl overflow-hidden border border-amber-200 shadow-xs group cursor-pointer block">
+            <a href="{{ $banner1Category ? '#catalog-section' : $banner1Link }}" 
+               @if($banner1Category) @click.prevent="filterByCategory('{{ $banner1Category }}')" @endif
+               class="relative h-[110px] sm:h-[130px] md:h-[152px] rounded-2xl overflow-hidden border border-amber-200 shadow-xs group cursor-pointer block">
                 <div class="absolute inset-0">
-                    <img src="https://images.unsplash.com/photo-1511192336575-5a79af67a629?auto=format&fit=crop&w=600&q=80" alt="Marching Promo" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+                    <img src="{{ \App\Models\Setting::get('promo_banner_1_image', 'https://images.unsplash.com/photo-1511192336575-5a79af67a629?auto=format&fit=crop&w=600&q=80') }}" alt="Marching Promo" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
                     <div class="absolute inset-0 bg-gradient-to-r from-slate-950/80 via-slate-950/60 to-transparent"></div>
                 </div>
                 <div class="absolute inset-0 p-3 md:p-4 flex flex-col justify-between text-white z-10">
                     <div>
+                        @if(\App\Models\Setting::get('promo_banner_1_badge'))
                         <span class="inline-block px-1.5 py-0.5 bg-amber-500 text-slate-950 font-black text-[8px] md:text-[9px] uppercase tracking-wider rounded-md mb-1">
-                            PROATSPAY DISKON
+                            {{ \App\Models\Setting::get('promo_banner_1_badge') }}
                         </span>
+                        @endif
                         <h3 class="text-xs md:text-sm font-black tracking-tight leading-snug">
-                            Marching Band & Drumband
+                            {{ \App\Models\Setting::get('promo_banner_1_title') }}
                         </h3>
-                        <p class="text-[9px] md:text-[10px] text-slate-200 font-medium font-semibold">100% Produk Original Garansi Resmi</p>
+                        <p class="text-[9px] md:text-[10px] text-slate-200 font-medium font-semibold">
+                            {{ \App\Models\Setting::get('promo_banner_1_subtitle') }}
+                        </p>
                     </div>
                     <div>
                         <span class="text-[9px] md:text-[10px] font-extrabold text-amber-300 flex items-center gap-1">
@@ -182,20 +195,26 @@
             </a>
 
             <!-- Promo Card 2 -->
-            <a href="#catalog-section" @click.prevent="filterByCategory('alat-musik-band')" class="relative h-[110px] sm:h-[130px] md:h-[152px] rounded-2xl overflow-hidden border border-amber-200 shadow-xs group cursor-pointer block">
+            <a href="{{ $banner2Category ? '#catalog-section' : $banner2Link }}" 
+               @if($banner2Category) @click.prevent="filterByCategory('{{ $banner2Category }}')" @endif
+               class="relative h-[110px] sm:h-[130px] md:h-[152px] rounded-2xl overflow-hidden border border-amber-200 shadow-xs group cursor-pointer block">
                 <div class="absolute inset-0">
-                    <img src="https://images.unsplash.com/photo-1510915361894-db8b60106cb1?auto=format&fit=crop&w=600&q=80" alt="Band Promo" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+                    <img src="{{ \App\Models\Setting::get('promo_banner_2_image', 'https://images.unsplash.com/photo-1510915361894-db8b60106cb1?auto=format&fit=crop&w=600&q=80') }}" alt="Band Promo" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
                     <div class="absolute inset-0 bg-gradient-to-r from-slate-950/80 via-slate-950/60 to-transparent"></div>
                 </div>
                 <div class="absolute inset-0 p-3 md:p-4 flex flex-col justify-between text-white z-10">
                     <div>
+                        @if(\App\Models\Setting::get('promo_banner_2_badge'))
                         <span class="inline-block px-1.5 py-0.5 bg-amber-500 text-slate-950 font-black text-[8px] md:text-[9px] uppercase tracking-wider rounded-md mb-1">
-                            PILIHAN LOKAL
+                            {{ \App\Models\Setting::get('promo_banner_2_badge') }}
                         </span>
+                        @endif
                         <h3 class="text-xs md:text-sm font-black tracking-tight leading-snug">
-                            Peralatan Band Lengkap
+                            {{ \App\Models\Setting::get('promo_banner_2_title') }}
                         </h3>
-                        <p class="text-[9px] md:text-[10px] text-slate-200 font-medium font-semibold">Gitar, Keyboard, Drum & Bass</p>
+                        <p class="text-[9px] md:text-[10px] text-slate-200 font-medium font-semibold">
+                            {{ \App\Models\Setting::get('promo_banner_2_subtitle') }}
+                        </p>
                     </div>
                     <div>
                         <span class="text-[9px] md:text-[10px] font-extrabold text-amber-300 flex items-center gap-1">

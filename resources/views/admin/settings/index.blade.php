@@ -39,7 +39,7 @@
             <button @click="activeTab = 'appearance'" 
                     :class="activeTab === 'appearance' ? 'bg-orange-500 text-white font-bold' : 'text-gray-600 hover:bg-orange-50 hover:text-orange-600 font-semibold'"
                     class="w-full flex items-center gap-3 px-3 py-3 rounded-xl text-xs transition">
-                <i class="fas fa-bullhorn w-5 text-center"></i> Teks & Pengumuman
+                <i class="fas fa-images w-5 text-center"></i> Banner & Pengumuman
             </button>
 
             <button @click="activeTab = 'features'" 
@@ -63,7 +63,7 @@
 
         <!-- Right Content Forms Container -->
         <div class="lg:col-span-3">
-            <form id="settingsForm" action="{{ route('admin.settings.update') }}" method="POST" class="space-y-6">
+            <form id="settingsForm" action="{{ route('admin.settings.update') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
                 @csrf
 
                 <!-- Section 1: Store Info & Contact -->
@@ -114,13 +114,13 @@
                 </div>
 
                 <!-- Section 2: Announcement Bar & Texts -->
-                <div x-show="activeTab === 'appearance'" x-cloak class="bg-white rounded-2xl border border-orange-100 p-6 shadow-xs space-y-5">
+                <div x-show="activeTab === 'appearance'" x-cloak class="bg-white rounded-2xl border border-orange-100 p-6 shadow-xs space-y-6">
                     <div class="border-b border-orange-100 pb-3 flex items-center gap-2">
                         <div class="w-8 h-8 bg-orange-100 text-orange-500 rounded-lg flex items-center justify-center text-sm font-bold">
                             <i class="fas fa-bullhorn"></i>
                         </div>
                         <div>
-                            <h3 class="text-sm font-extrabold text-gray-900">Teks Pengumuman & Banner</h3>
+                            <h3 class="text-sm font-extrabold text-gray-900">Running Text Pengumuman</h3>
                             <p class="text-[11px] text-gray-400">Pengaturan baris running text promo di bagian paling atas halaman katalog.</p>
                         </div>
                     </div>
@@ -131,6 +131,104 @@
                             <input type="text" name="announcement_bar" value="{{ old('announcement_bar', $settings['announcement_bar']) }}" required class="w-full p-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:outline-none">
                             <p class="text-[10px] text-gray-400 mt-1">Teks ini akan muncul di bar running bagian paling atas situs katalog publik.</p>
                         </div>
+                    </div>
+
+                    <!-- Banner Samping Kanan (Shopee-style Promos) -->
+                    <div class="border-t border-orange-100 pt-6 space-y-5">
+                        <div class="flex items-center gap-2">
+                            <div class="w-8 h-8 bg-orange-100 text-orange-500 rounded-lg flex items-center justify-center text-sm font-bold">
+                                <i class="fas fa-images"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-sm font-extrabold text-gray-900">Pengaturan 2 Banner Samping Kanan</h3>
+                                <p class="text-[11px] text-gray-400">Atur konten teks, gambar, dan tujuan link dari 2 banner di sebelah kanan slider utama.</p>
+                            </div>
+                        </div>
+
+                        <!-- Banner Samping 1 (Top) -->
+                        <div class="bg-gray-50 p-4 rounded-2xl border border-gray-200 space-y-4 text-xs font-semibold">
+                            <h4 class="font-extrabold text-orange-600 text-xs flex items-center gap-1">
+                                <span class="bg-orange-100 text-orange-600 px-2 py-0.5 rounded text-[10px]">BANNER 1</span> Atas / Kiri
+                            </h4>
+                            
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block font-bold text-gray-700 uppercase tracking-wider mb-1">Teks Badge (Kecil)</label>
+                                    <input type="text" name="promo_banner_1_badge" value="{{ old('promo_banner_1_badge', $settings['promo_banner_1_badge']) }}" class="w-full p-2.5 bg-white border border-gray-200 rounded-xl focus:outline-none">
+                                </div>
+                                <div>
+                                    <label class="block font-bold text-gray-700 uppercase tracking-wider mb-1">Judul Banner (Besar)</label>
+                                    <input type="text" name="promo_banner_1_title" value="{{ old('promo_banner_1_title', $settings['promo_banner_1_title']) }}" class="w-full p-2.5 bg-white border border-gray-200 rounded-xl focus:outline-none">
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block font-bold text-gray-700 uppercase tracking-wider mb-1">Deskripsi / Subtitle</label>
+                                    <input type="text" name="promo_banner_1_subtitle" value="{{ old('promo_banner_1_subtitle', $settings['promo_banner_1_subtitle']) }}" class="w-full p-2.5 bg-white border border-gray-200 rounded-xl focus:outline-none">
+                                </div>
+                                <div>
+                                    <label class="block font-bold text-gray-700 uppercase tracking-wider mb-1">Tautan / Link Klik</label>
+                                    <input type="text" name="promo_banner_1_link" value="{{ old('promo_banner_1_link', $settings['promo_banner_1_link']) }}" placeholder="Contoh: ?category=marching-band-drumband" class="w-full p-2.5 bg-white border border-gray-200 rounded-xl focus:outline-none">
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 items-center">
+                                <div>
+                                    <label class="block font-bold text-gray-700 uppercase tracking-wider mb-1">Unggah Gambar Latar (Foto)</label>
+                                    <input type="file" name="promo_banner_1_file" accept="image/*" class="w-full p-2 bg-white border border-gray-200 rounded-xl">
+                                </div>
+                                @if($settings['promo_banner_1_image'])
+                                    <div>
+                                        <span class="block text-[10px] text-gray-500 mb-1">Preview Gambar Saat Ini:</span>
+                                        <img src="{{ $settings['promo_banner_1_image'] }}" alt="Banner 1" class="h-14 w-auto rounded-lg object-cover border border-gray-300">
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+
+                        <!-- Banner Samping 2 (Bottom) -->
+                        <div class="bg-gray-50 p-4 rounded-2xl border border-gray-200 space-y-4 text-xs font-semibold">
+                            <h4 class="font-extrabold text-orange-600 text-xs flex items-center gap-1">
+                                <span class="bg-orange-100 text-orange-600 px-2 py-0.5 rounded text-[10px]">BANNER 2</span> Bawah / Kanan
+                            </h4>
+                            
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block font-bold text-gray-700 uppercase tracking-wider mb-1">Teks Badge (Kecil)</label>
+                                    <input type="text" name="promo_banner_2_badge" value="{{ old('promo_banner_2_badge', $settings['promo_banner_2_badge']) }}" class="w-full p-2.5 bg-white border border-gray-200 rounded-xl focus:outline-none">
+                                </div>
+                                <div>
+                                    <label class="block font-bold text-gray-700 uppercase tracking-wider mb-1">Judul Banner (Besar)</label>
+                                    <input type="text" name="promo_banner_2_title" value="{{ old('promo_banner_2_title', $settings['promo_banner_2_title']) }}" class="w-full p-2.5 bg-white border border-gray-200 rounded-xl focus:outline-none">
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block font-bold text-gray-700 uppercase tracking-wider mb-1">Deskripsi / Subtitle</label>
+                                    <input type="text" name="promo_banner_2_subtitle" value="{{ old('promo_banner_2_subtitle', $settings['promo_banner_2_subtitle']) }}" class="w-full p-2.5 bg-white border border-gray-200 rounded-xl focus:outline-none">
+                                </div>
+                                <div>
+                                    <label class="block font-bold text-gray-700 uppercase tracking-wider mb-1">Tautan / Link Klik</label>
+                                    <input type="text" name="promo_banner_2_link" value="{{ old('promo_banner_2_link', $settings['promo_banner_2_link']) }}" placeholder="Contoh: ?category=alat-musik-band" class="w-full p-2.5 bg-white border border-gray-200 rounded-xl focus:outline-none">
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 items-center">
+                                <div>
+                                    <label class="block font-bold text-gray-700 uppercase tracking-wider mb-1">Unggah Gambar Latar (Foto)</label>
+                                    <input type="file" name="promo_banner_2_file" accept="image/*" class="w-full p-2 bg-white border border-gray-200 rounded-xl">
+                                </div>
+                                @if($settings['promo_banner_2_image'])
+                                    <div>
+                                        <span class="block text-[10px] text-gray-500 mb-1">Preview Gambar Saat Ini:</span>
+                                        <img src="{{ $settings['promo_banner_2_image'] }}" alt="Banner 2" class="h-14 w-auto rounded-lg object-cover border border-gray-300">
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+
                     </div>
                 </div>
 
