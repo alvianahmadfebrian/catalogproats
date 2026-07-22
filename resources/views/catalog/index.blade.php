@@ -158,7 +158,7 @@
         <!-- Right: 2 Stacked Static Promo Banners -->
         <div class="grid grid-cols-2 md:grid-cols-1 md:col-span-1 gap-3 md:gap-4 md:h-[320px]">
             <!-- Promo Card 1 -->
-            <a href="?category=marching-band-drumband" class="relative h-[110px] sm:h-[130px] md:h-[152px] rounded-2xl overflow-hidden border border-amber-200 shadow-xs group cursor-pointer block">
+            <a href="#catalog-section" @click.prevent="filterByCategory('marching-band-drumband')" class="relative h-[110px] sm:h-[130px] md:h-[152px] rounded-2xl overflow-hidden border border-amber-200 shadow-xs group cursor-pointer block">
                 <div class="absolute inset-0">
                     <img src="https://images.unsplash.com/photo-1511192336575-5a79af67a629?auto=format&fit=crop&w=600&q=80" alt="Marching Promo" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
                     <div class="absolute inset-0 bg-gradient-to-r from-slate-950/80 via-slate-950/60 to-transparent"></div>
@@ -182,7 +182,7 @@
             </a>
 
             <!-- Promo Card 2 -->
-            <a href="?category=alat-musik-band" class="relative h-[110px] sm:h-[130px] md:h-[152px] rounded-2xl overflow-hidden border border-amber-200 shadow-xs group cursor-pointer block">
+            <a href="#catalog-section" @click.prevent="filterByCategory('alat-musik-band')" class="relative h-[110px] sm:h-[130px] md:h-[152px] rounded-2xl overflow-hidden border border-amber-200 shadow-xs group cursor-pointer block">
                 <div class="absolute inset-0">
                     <img src="https://images.unsplash.com/photo-1510915361894-db8b60106cb1?auto=format&fit=crop&w=600&q=80" alt="Band Promo" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
                     <div class="absolute inset-0 bg-gradient-to-r from-slate-950/80 via-slate-950/60 to-transparent"></div>
@@ -208,7 +208,7 @@
     </div>
 
     <!-- Category Highlights Section (Touch Horizontal Scroll on Mobile) -->
-    <div class="bg-white rounded-2xl shadow-xs border border-amber-100 p-3.5 md:p-6">
+    <div id="catalog-section" class="bg-white rounded-2xl shadow-xs border border-amber-100 p-3.5 md:p-6">
         <div class="flex items-center justify-between mb-3">
             <h2 class="text-xs md:text-base font-bold text-gray-800 uppercase tracking-wider flex items-center gap-2">
                 <i class="fas fa-th-large text-amber-600"></i> {{ __('Kategori Instrumen Musik') }}
@@ -1160,6 +1160,10 @@
             filterByCategory(slug) {
                 this.selectedCategory = slug;
                 this.applyFilters();
+                // Smooth scroll to catalog
+                setTimeout(() => {
+                    document.getElementById('catalog-section')?.scrollIntoView({ behavior: 'smooth' });
+                }, 50);
             },
 
             setSort(sortType) {
