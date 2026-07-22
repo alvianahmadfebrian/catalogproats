@@ -37,108 +37,174 @@
         ];
     @endphp
 
-    <div x-data="{
-            currentSlide: 0,
-            totalSlides: {{ count($slides) }},
-            timer: null,
-            startAutoSlide() {
-                this.stopAutoSlide();
-                if (this.totalSlides > 1) {
-                    this.timer = setInterval(() => {
-                        this.currentSlide = (this.currentSlide + 1) % this.totalSlides;
-                    }, 4500);
-                }
-            },
-            stopAutoSlide() {
-                if (this.timer) clearInterval(this.timer);
-            }
-         }"
-         x-init="startAutoSlide()"
-         @mouseenter="stopAutoSlide()"
-         @mouseleave="startAutoSlide()"
-         class="relative rounded-2xl overflow-hidden shadow-xs border border-amber-300 min-h-[210px] md:min-h-[250px] bg-amber-400 text-slate-950">
+    <!-- Hero Banner Layout Grid (Shopee Style: Left Main Carousel & Right Secondary Promos) -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4">
         
-        <!-- Slides Container -->
-        @foreach($slides as $index => $slide)
-        <div x-show="currentSlide === {{ $index }}"
-             x-transition:enter="transition opacity ease-out duration-600"
-             x-transition:enter-start="opacity-0"
-             x-transition:enter-end="opacity-100"
-             x-transition:leave="transition opacity ease-in duration-300"
-             x-transition:leave-start="opacity-100"
-             x-transition:leave-end="opacity-0"
-             x-cloak
-             :class="currentSlide === {{ $index }} ? 'z-20' : 'z-10'"
-             class="absolute inset-0 w-full h-full p-4 sm:p-5 md:p-7 flex flex-col justify-between bg-gradient-to-r from-{{ $slide->bg_color_from ?? 'amber-400' }} via-yellow-400 to-{{ $slide->bg_color_to ?? 'amber-300' }} text-slate-950">
+        <!-- Left: Auto-Slide Carousel -->
+        <div x-data="{
+                currentSlide: 0,
+                totalSlides: {{ count($slides) }},
+                timer: null,
+                startAutoSlide() {
+                    this.stopAutoSlide();
+                    if (this.totalSlides > 1) {
+                        this.timer = setInterval(() => {
+                            this.currentSlide = (this.currentSlide + 1) % this.totalSlides;
+                        }, 4500);
+                    }
+                },
+                stopAutoSlide() {
+                    if (this.timer) clearInterval(this.timer);
+                }
+             }"
+             x-init="startAutoSlide()"
+             @mouseenter="stopAutoSlide()"
+             @mouseleave="startAutoSlide()"
+             class="md:col-span-2 relative rounded-2xl overflow-hidden shadow-xs border border-amber-300 h-[200px] sm:h-[240px] md:h-[320px] bg-amber-400 text-slate-950">
             
-            @if(!empty($slide->image_url))
-                <!-- Custom Background Image with Subtle Overlay -->
-                <div class="absolute inset-0 z-0">
-                    <img src="{{ $slide->image_url }}" alt="{{ $slide->title }}" class="w-full h-full object-cover">
-                    <div class="absolute inset-0 bg-gradient-to-r from-slate-950/90 via-slate-950/60 to-slate-950/20"></div>
-                </div>
+            <!-- Slides Container -->
+            @foreach($slides as $index => $slide)
+            <div x-show="currentSlide === {{ $index }}"
+                 x-transition:enter="transition opacity ease-out duration-600"
+                 x-transition:enter-start="opacity-0"
+                 x-transition:enter-end="opacity-100"
+                 x-transition:leave="transition opacity ease-in duration-300"
+                 x-transition:leave-start="opacity-100"
+                 x-transition:leave-end="opacity-0"
+                 x-cloak
+                 :class="currentSlide === {{ $index }} ? 'z-20' : 'z-10'"
+                 class="absolute inset-0 w-full h-full p-4 sm:p-5 md:p-6 flex flex-col justify-between bg-gradient-to-r from-{{ $slide->bg_color_from ?? 'amber-400' }} via-yellow-400 to-{{ $slide->bg_color_to ?? 'amber-300' }} text-slate-950">
                 
-                <div class="z-10 max-w-xl text-white">
-                    @if(!empty($slide->badge_text))
-                    <span class="inline-block px-2.5 py-0.5 md:px-3 md:py-1 bg-amber-400 text-slate-950 font-extrabold text-[10px] md:text-[11px] uppercase tracking-wider rounded-full mb-1.5 shadow-xs">
-                        {{ $slide->badge_text }}
-                    </span>
-                    @endif
-                    <h1 class="text-lg md:text-3xl font-extrabold leading-tight tracking-tight mb-1 md:mb-2 text-white">
-                        {{ $slide->title }}
-                    </h1>
-                    @if(!empty($slide->subtitle))
-                    <p class="text-[11px] md:text-sm text-slate-200 font-semibold mb-2 md:mb-3 drop-shadow-sm line-clamp-2">
-                        {{ $slide->subtitle }}
-                    </p>
-                    @endif
-                </div>
-
-                <div class="z-10 flex flex-wrap items-center gap-1.5 md:gap-2">
-                    @if(!empty($slide->button_text))
-                    <a href="{{ $slide->button_url ?? '#catalog-section' }}" class="px-3 py-1.5 md:px-4 md:py-2 bg-amber-400 hover:bg-amber-300 text-slate-950 font-extrabold text-xs md:text-sm rounded-xl transition shadow-md flex items-center gap-1.5">
-                        <i class="fas fa-drum text-slate-950 text-xs"></i> {{ $slide->button_text }}
-                    </a>
-                    @endif
-                    <span class="px-2.5 py-1 md:px-3 md:py-1.5 bg-slate-900/80 backdrop-blur rounded-xl text-amber-300 text-[10px] md:text-xs font-extrabold flex items-center gap-1 border border-slate-700 shadow-2xs">
-                        <i class="fas fa-crown text-amber-400"></i> Katalog Resmi Proats
-                    </span>
-                </div>
-            @else
-                <!-- Styled Gradient Text Banner (Default) -->
-                <div class="z-10 max-w-xl">
-                    @if(!empty($slide->badge_text))
-                    <span class="inline-block px-2.5 py-0.5 md:px-3 md:py-1 bg-slate-950 text-amber-300 font-extrabold text-[10px] md:text-[11px] uppercase tracking-wider rounded-full mb-1.5 shadow-xs">
-                        {{ $slide->badge_text }}
-                    </span>
-                    @endif
-                    <h1 class="text-lg md:text-3xl font-extrabold leading-tight tracking-tight mb-1 md:mb-2 text-slate-950">
-                        {{ $slide->title }}
-                    </h1>
-                    @if(!empty($slide->subtitle))
-                    <p class="text-[11px] md:text-sm text-slate-900 font-semibold mb-2 md:mb-3 line-clamp-2">
-                        {{ $slide->subtitle }}
-                    </p>
-                    @endif
-                </div>
-                <div class="z-10 flex flex-wrap items-center gap-1.5 md:gap-2">
-                    @if(!empty($slide->button_text))
-                    <a href="{{ $slide->button_url ?? '#catalog-section' }}" class="px-3 py-1.5 md:px-4 md:py-2 bg-slate-950 text-amber-300 font-extrabold text-xs md:text-sm rounded-xl hover:bg-black transition shadow-md flex items-center gap-1.5">
-                        <i class="fas fa-drum text-amber-400 text-xs"></i> {{ $slide->button_text }}
-                    </a>
-                    @endif
-                    <span class="px-2.5 py-1 md:px-3 md:py-1.5 bg-white/70 backdrop-blur rounded-xl text-slate-950 text-[10px] md:text-xs font-extrabold flex items-center gap-1 border border-white/70 shadow-2xs">
-                        <i class="fas fa-crown text-amber-700"></i> Toko Musik Proats
-                    </span>
-                </div>
-                <div class="absolute -right-10 -bottom-10 opacity-15 pointer-events-none text-slate-950 z-0">
-                    <i class="fas fa-music text-[160px] md:text-[200px]"></i>
-                </div>
+                @if(!empty($slide->image_url))
+                    <!-- Custom Background Image with Subtle Overlay -->
+                    <div class="absolute inset-0 z-0">
+                        <img src="{{ $slide->image_url }}" alt="{{ $slide->title }}" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-r from-slate-950/90 via-slate-950/60 to-slate-950/20"></div>
+                    </div>
+                    
+                    <div class="z-10 max-w-xl text-white">
+                        @if(!empty($slide->badge_text))
+                        <span class="inline-block px-2 py-0.5 bg-amber-500 text-slate-950 font-extrabold text-[9px] md:text-[10px] uppercase tracking-wider rounded-md mb-1.5 shadow-xs">
+                            {{ $slide->badge_text }}
+                        </span>
+                        @endif
+                        <h1 class="text-sm sm:text-base md:text-2xl font-black leading-tight tracking-tight mb-1 text-white">
+                            {{ $slide->title }}
+                        </h1>
+                        @if(!empty($slide->subtitle))
+                        <p class="text-[10px] md:text-xs text-slate-200 font-semibold mb-2 line-clamp-2">
+                            {{ $slide->subtitle }}
+                        </p>
+                        @endif
+                    </div>
+    
+                    <div class="z-10 flex flex-wrap items-center gap-1.5 md:gap-2">
+                        @if(!empty($slide->button_text))
+                        <a href="{{ $slide->button_url ?? '#catalog-section' }}" class="px-3 py-1.5 bg-amber-400 hover:bg-amber-300 text-slate-950 font-extrabold text-[10px] md:text-xs rounded-xl transition shadow-md flex items-center gap-1.5">
+                            <i class="fas fa-drum text-slate-950 text-xs"></i> {{ $slide->button_text }}
+                        </a>
+                        @endif
+                        <span class="px-2 py-1 bg-slate-900/80 backdrop-blur rounded-xl text-amber-300 text-[9px] md:text-[10px] font-extrabold flex items-center gap-1 border border-slate-700 shadow-2xs">
+                            <i class="fas fa-crown text-amber-400"></i> Katalog Resmi Proats
+                        </span>
+                    </div>
+                @else
+                    <!-- Styled Gradient Text Banner (Default) -->
+                    <div class="z-10 max-w-xl">
+                        @if(!empty($slide->badge_text))
+                        <span class="inline-block px-2 py-0.5 bg-slate-950 text-amber-300 font-extrabold text-[9px] md:text-[10px] uppercase tracking-wider rounded-md mb-1.5 shadow-xs">
+                            {{ $slide->badge_text }}
+                        </span>
+                        @endif
+                        <h1 class="text-sm sm:text-base md:text-2xl font-black leading-tight tracking-tight mb-1 text-slate-950">
+                            {{ $slide->title }}
+                        </h1>
+                        @if(!empty($slide->subtitle))
+                        <p class="text-[10px] md:text-xs text-slate-900 font-semibold mb-2 line-clamp-2">
+                            {{ $slide->subtitle }}
+                        </p>
+                        @endif
+                    </div>
+                    <div class="z-10 flex flex-wrap items-center gap-1.5 md:gap-2">
+                        @if(!empty($slide->button_text))
+                        <a href="{{ $slide->button_url ?? '#catalog-section' }}" class="px-3 py-1.5 bg-slate-950 text-amber-300 font-extrabold text-[10px] md:text-xs rounded-xl hover:bg-black transition shadow-md flex items-center gap-1.5">
+                            <i class="fas fa-drum text-amber-400 text-xs"></i> {{ $slide->button_text }}
+                        </a>
+                        @endif
+                        <span class="px-2 py-1 bg-white/70 backdrop-blur rounded-xl text-slate-950 text-[9px] md:text-[10px] font-extrabold flex items-center gap-1 border border-white/70 shadow-2xs">
+                            <i class="fas fa-crown text-amber-700"></i> Toko Musik Proats
+                        </span>
+                    </div>
+                    <div class="absolute -right-10 -bottom-10 opacity-15 pointer-events-none text-slate-950 z-0">
+                        <i class="fas fa-music text-[130px] md:text-[180px]"></i>
+                    </div>
+                @endif
+    
+            </div>
+            @endforeach
+    
+            <!-- Slide Indicators (Dots) -->
+            @if(count($slides) > 1)
+            <div class="absolute bottom-3 left-1/2 -translate-x-1/2 z-30 flex items-center gap-1.5">
+                <template x-for="i in {{ count($slides) }}" :key="i-1">
+                    <button @click="currentSlide = i-1"
+                            :class="currentSlide === i-1 ? 'w-5 bg-amber-500' : 'w-1.5 bg-white/60 hover:bg-white'"
+                            class="h-1.5 rounded-full transition-all duration-300"></button>
+                </template>
+            </div>
             @endif
-
         </div>
-        @endforeach
 
+        <!-- Right: 2 Stacked Static Promo Banners -->
+        <div class="grid grid-cols-2 md:grid-cols-1 md:col-span-1 gap-3 md:gap-4 md:h-[320px]">
+            <!-- Promo Card 1 -->
+            <a href="?category=marching-band-drumband" class="relative h-[110px] sm:h-[130px] md:h-[152px] rounded-2xl overflow-hidden border border-amber-200 shadow-xs group cursor-pointer block">
+                <div class="absolute inset-0">
+                    <img src="https://images.unsplash.com/photo-1511192336575-5a79af67a629?auto=format&fit=crop&w=600&q=80" alt="Marching Promo" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+                    <div class="absolute inset-0 bg-gradient-to-r from-slate-950/80 via-slate-950/60 to-transparent"></div>
+                </div>
+                <div class="absolute inset-0 p-3 md:p-4 flex flex-col justify-between text-white z-10">
+                    <div>
+                        <span class="inline-block px-1.5 py-0.5 bg-amber-500 text-slate-950 font-black text-[8px] md:text-[9px] uppercase tracking-wider rounded-md mb-1">
+                            PROATSPAY DISKON
+                        </span>
+                        <h3 class="text-xs md:text-sm font-black tracking-tight leading-snug">
+                            Marching Band & Drumband
+                        </h3>
+                        <p class="text-[9px] md:text-[10px] text-slate-200 font-medium font-semibold">100% Produk Original Garansi Resmi</p>
+                    </div>
+                    <div>
+                        <span class="text-[9px] md:text-[10px] font-extrabold text-amber-300 flex items-center gap-1">
+                            Beli Sekarang <i class="fas fa-arrow-right text-[8px]"></i>
+                        </span>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Promo Card 2 -->
+            <a href="?category=alat-musik-band" class="relative h-[110px] sm:h-[130px] md:h-[152px] rounded-2xl overflow-hidden border border-amber-200 shadow-xs group cursor-pointer block">
+                <div class="absolute inset-0">
+                    <img src="https://images.unsplash.com/photo-1510915361894-db8b60106cb1?auto=format&fit=crop&w=600&q=80" alt="Band Promo" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+                    <div class="absolute inset-0 bg-gradient-to-r from-slate-950/80 via-slate-950/60 to-transparent"></div>
+                </div>
+                <div class="absolute inset-0 p-3 md:p-4 flex flex-col justify-between text-white z-10">
+                    <div>
+                        <span class="inline-block px-1.5 py-0.5 bg-amber-500 text-slate-950 font-black text-[8px] md:text-[9px] uppercase tracking-wider rounded-md mb-1">
+                            PILIHAN LOKAL
+                        </span>
+                        <h3 class="text-xs md:text-sm font-black tracking-tight leading-snug">
+                            Peralatan Band Lengkap
+                        </h3>
+                        <p class="text-[9px] md:text-[10px] text-slate-200 font-medium font-semibold">Gitar, Keyboard, Drum & Bass</p>
+                    </div>
+                    <div>
+                        <span class="text-[9px] md:text-[10px] font-extrabold text-amber-300 flex items-center gap-1">
+                            Cek Promo <i class="fas fa-arrow-right text-[8px]"></i>
+                        </span>
+                    </div>
+                </div>
+            </a>
+        </div>
     </div>
 
     <!-- Category Highlights Section (Touch Horizontal Scroll on Mobile) -->
