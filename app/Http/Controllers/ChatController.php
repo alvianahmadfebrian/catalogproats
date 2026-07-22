@@ -52,12 +52,24 @@ class ChatController extends Controller
             'message' => 'required|string|max:1000',
         ]);
 
+        $user = Auth::user();
         $message = Message::create([
             'user_id' => $userId,
             'message' => $validated['message'],
             'is_admin' => false,
             'is_read' => false,
         ]);
+
+        // Notify admins about new chat message
+        $admins = User::where('email', 'like', '%@proats.com')->get();
+        foreach ($admins as $admin) {
+            $admin->notify(new \App\Notifications\GeneralNotification(
+                "Pesan Chat Baru dari {$user->name}",
+                "Customer: " . \Illuminate\Support\Str::limit($message->message, 50),
+                route('admin.chat.index'),
+                'fas fa-comments text-amber-600'
+            ));
+        }
 
         return response()->json([
             'success' => true,
@@ -161,6 +173,17 @@ class ChatController extends Controller
             'is_admin' => true,
             'is_read' => false,
         ]);
+
+        // Notify user about new message from admin
+        $user = User::find($userId);
+        if ($user) {
+            $user->notify(new \App\Notifications\GeneralNotification(
+                "Pesan Baru dari Admin",
+                "Admin: " . \Illuminate\Support\Str::limit($message->message, 50),
+                route('catalog.index'),
+                'fas fa-comments text-amber-600'
+            ));
+        }
 
         return response()->json([
             'success' => true,

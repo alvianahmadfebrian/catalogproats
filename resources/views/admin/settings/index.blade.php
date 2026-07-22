@@ -48,6 +48,12 @@
                 <i class="fas fa-sliders w-5 text-center"></i> Fitur & Modul Sistem
             </button>
 
+            <button @click="activeTab = 'social'" 
+                    :class="activeTab === 'social' ? 'bg-orange-500 text-white font-bold' : 'text-gray-600 hover:bg-orange-50 hover:text-orange-600 font-semibold'"
+                    class="w-full flex items-center gap-3 px-3 py-3 rounded-xl text-xs transition">
+                <i class="fas fa-share-nodes w-5 text-center"></i> Media Sosial
+            </button>
+
             <button @click="activeTab = 'account'" 
                     :class="activeTab === 'account' ? 'bg-orange-500 text-white font-bold' : 'text-gray-600 hover:bg-orange-50 hover:text-orange-600 font-semibold'"
                     class="w-full flex items-center gap-3 px-3 py-3 rounded-xl text-xs transition">
@@ -164,6 +170,51 @@
                             </div>
                             <input type="checkbox" name="maintenance_mode" value="1" {{ $settings['maintenance_mode'] == '1' ? 'checked' : '' }} class="w-5 h-5 rounded text-red-500 focus:ring-red-400">
                         </label>
+                    </div>
+                </div>
+
+                <!-- Section 5: Social Media Links -->
+                <div x-show="activeTab === 'social'" x-cloak class="bg-white rounded-2xl border border-orange-100 p-6 shadow-xs space-y-5">
+                    <div class="border-b border-orange-100 pb-3 flex items-center gap-2">
+                        <div class="w-8 h-8 bg-orange-100 text-orange-500 rounded-lg flex items-center justify-center text-sm font-bold">
+                            <i class="fas fa-share-nodes"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-sm font-extrabold text-gray-900">Tautan Media Sosial</h3>
+                            <p class="text-[11px] text-gray-400">Atur tautan profil akun Facebook, Instagram, dan TikTok toko Anda.</p>
+                        </div>
+                    </div>
+
+                    <div class="space-y-4 text-xs font-semibold">
+                        <div>
+                            <label class="block font-bold text-gray-700 uppercase tracking-wider mb-1">Link Facebook Profile</label>
+                            <div class="relative flex items-center">
+                                <span class="absolute left-3.5 text-gray-400 text-sm">
+                                    <i class="fab fa-facebook"></i>
+                                </span>
+                                <input type="url" name="social_facebook" value="{{ old('social_facebook', $settings['social_facebook'] ?? '') }}" placeholder="https://www.facebook.com/..." class="w-full pl-9 p-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:outline-none">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block font-bold text-gray-700 uppercase tracking-wider mb-1">Link Instagram Profile</label>
+                            <div class="relative flex items-center">
+                                <span class="absolute left-3.5 text-gray-400 text-sm">
+                                    <i class="fab fa-instagram"></i>
+                                </span>
+                                <input type="url" name="social_instagram" value="{{ old('social_instagram', $settings['social_instagram'] ?? '') }}" placeholder="https://www.instagram.com/..." class="w-full pl-9 p-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:outline-none">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block font-bold text-gray-700 uppercase tracking-wider mb-1">Link TikTok Profile</label>
+                            <div class="relative flex items-center">
+                                <span class="absolute left-3.5 text-gray-400 text-sm">
+                                    <i class="fab fa-tiktok"></i>
+                                </span>
+                                <input type="url" name="social_tiktok" value="{{ old('social_tiktok', $settings['social_tiktok'] ?? '') }}" placeholder="https://www.tiktok.com/@..." class="w-full pl-9 p-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:outline-none">
+                            </div>
+                        </div>
                     </div>
                 </div>
 

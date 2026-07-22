@@ -60,6 +60,13 @@ class CustomerAuthController extends Controller
             'password' => Hash::make($validated['password']),
         ]);
 
+        $user->notify(new \App\Notifications\GeneralNotification(
+            "Selamat Datang di Proats E-Catalog!",
+            "Halo {$user->name}, terima kasih telah mendaftar. Mulailah menjelajahi instrumen musik favorit Anda!",
+            route('catalog.index'),
+            'fas fa-hands-clapping text-amber-600'
+        ));
+
         Auth::login($user);
 
         return redirect()->route('catalog.index')->with('success', 'Pendaftaran akun berhasil! Selamat berbelanja di Proats.');
@@ -107,6 +114,13 @@ class CustomerAuthController extends Controller
                 'google_id' => $demoGoogleUser['google_id'],
                 'avatar' => $demoGoogleUser['avatar'],
             ]);
+
+            $user->notify(new \App\Notifications\GeneralNotification(
+                "Selamat Datang di Proats E-Catalog!",
+                "Halo {$user->name}, terima kasih telah mendaftar dengan Akun Google. Temukan berbagai penawaran menarik!",
+                route('catalog.index'),
+                'fas fa-hands-clapping text-amber-600'
+            ));
         }
 
         Auth::login($user, true);
@@ -155,6 +169,13 @@ class CustomerAuthController extends Controller
                         'google_id' => $googleId,
                         'avatar' => $avatar,
                     ]);
+
+                    $user->notify(new \App\Notifications\GeneralNotification(
+                        "Selamat Datang di Proats E-Catalog!",
+                        "Halo {$user->name}, terima kasih telah mendaftar dengan Google. Selamat berbelanja!",
+                        route('catalog.index'),
+                        'fas fa-hands-clapping text-amber-600'
+                    ));
                 }
 
                 Auth::login($user, true);

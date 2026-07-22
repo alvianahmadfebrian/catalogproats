@@ -10,11 +10,19 @@ use App\Http\Controllers\Admin\AdminProductController;
 use App\Http\Controllers\Admin\AdminCategoryController;
 
 // Public Catalog Routes
+Route::get('/lang/{locale}', function ($locale) {
+    if (in_array($locale, ['en', 'id'])) {
+        session(['locale' => $locale]);
+    }
+    return redirect()->back();
+})->name('lang.switch');
+
 Route::get('/', [CatalogController::class, 'index'])->name('catalog.index');
 Route::get('/cart', function () { return view('cart.index'); })->name('cart.index');
 Route::get('/api/products', [CatalogController::class, 'index'])->name('catalog.api');
 Route::get('/product/{id}', [CatalogController::class, 'show'])->name('catalog.show');
 Route::get('/api/products/{id}/reviews', [\App\Http\Controllers\ReviewController::class, 'getReviews'])->name('products.reviews.get');
+Route::post('/api/promo/validate', [\App\Http\Controllers\PromoValidationController::class, 'validatePromo'])->name('promo.validate');
 
 // Customer Auth Routes
 Route::get('/login', [CustomerAuthController::class, 'showLoginForm'])->name('login');
@@ -32,6 +40,14 @@ Route::middleware(['auth'])->group(function () {
 
     // Review Store Endpoint
     Route::post('/api/products/{id}/reviews', [\App\Http\Controllers\ReviewController::class, 'store'])->name('products.reviews.store');
+
+    // Notifications Endpoints
+    Route::get('/api/notifications', [\App\Http\Controllers\NotificationController::class, 'index'])->name('notifications.index');
+    Route::post('/api/notifications/{id}/read', [\App\Http\Controllers\NotificationController::class, 'markAsRead'])->name('notifications.read');
+    Route::post('/api/notifications/read-all', [\App\Http\Controllers\NotificationController::class, 'markAllAsRead'])->name('notifications.read_all');
+
+    // Checkout API Endpoint
+    Route::post('/api/checkout', [\App\Http\Controllers\CheckoutController::class, 'store'])->name('checkout.store');
 
     // Profile Settings Routes
     Route::get('/profile', [\App\Http\Controllers\UserProfileController::class, 'index'])->name('profile.index');
@@ -66,6 +82,10 @@ Route::middleware(['auth'])->prefix('cms-admin')->name('admin.')->group(function
     // Admin Banners Management
     Route::resource('banners', \App\Http\Controllers\Admin\AdminBannerController::class);
     Route::post('/banners/{id}/toggle', [\App\Http\Controllers\Admin\AdminBannerController::class, 'toggleStatus'])->name('banners.toggle');
+
+    // Admin Promos Management
+    Route::resource('promos', \App\Http\Controllers\Admin\AdminPromoController::class)->except(['create', 'edit', 'show']);
+    Route::post('/promos/{id}/toggle', [\App\Http\Controllers\Admin\AdminPromoController::class, 'toggleStatus'])->name('promos.toggle');
 
     // Admin Settings Routes
     Route::get('/settings', [\App\Http\Controllers\Admin\AdminSettingsController::class, 'index'])->name('settings.index');

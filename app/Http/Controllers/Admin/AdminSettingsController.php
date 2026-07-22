@@ -24,6 +24,11 @@ class AdminSettingsController extends Controller
             'enable_chat' => Setting::get('enable_chat', '1'),
             'enable_cart' => Setting::get('enable_cart', '1'),
             'maintenance_mode' => Setting::get('maintenance_mode', '0'),
+
+            // Social Media links
+            'social_facebook' => Setting::get('social_facebook', 'https://www.facebook.com/pro.ats.5'),
+            'social_instagram' => Setting::get('social_instagram', 'https://www.instagram.com/proats.marchingproduct?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=='),
+            'social_tiktok' => Setting::get('social_tiktok', 'https://www.tiktok.com/@proats'),
         ];
 
         $admin = Auth::user();

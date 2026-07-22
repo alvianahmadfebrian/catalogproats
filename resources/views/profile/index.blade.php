@@ -81,6 +81,14 @@
                 class="flex-1 min-w-[130px] py-2.5 px-3 md:py-3 md:px-4 rounded-xl transition flex items-center justify-center gap-1.5 shrink-0">
             <i class="fas fa-receipt"></i> Pesanan Saya ({{ count($orders) }})
         </button>
+        
+        <!-- Mobile Logout Option -->
+        <form action="{{ route('logout') }}" method="POST" class="md:hidden flex shrink-0 border-l border-gray-100 pl-1.5">
+            @csrf
+            <button type="submit" class="py-2.5 px-3.5 text-red-600 hover:bg-red-50 rounded-xl transition flex items-center justify-center gap-1.5 font-bold">
+                <i class="fas fa-sign-out-alt"></i> {{ __('Keluar') }}
+            </button>
+        </form>
     </div>
 
     <!-- Tab 1: Edit Profile Form -->

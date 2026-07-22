@@ -50,10 +50,22 @@ class AdminProductController extends Controller
             'stock' => 'required|integer|min:0',
             'rating' => 'required|numeric|min:1|max:5',
             'location' => 'required|string|max:255',
-            'image_url' => 'required|url',
+            'image_file' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'description' => 'nullable|string',
             'variants_input' => 'nullable|string',
         ]);
+
+        if ($request->hasFile('image_file')) {
+            $file = $request->file('image_file');
+            $fileName = time() . '_' . Str::random(8) . '.' . $file->getClientOriginalExtension();
+            
+            if (!file_exists(public_path('uploads/products'))) {
+                mkdir(public_path('uploads/products'), 0755, true);
+            }
+            
+            $file->move(public_path('uploads/products'), $fileName);
+            $validated['image_url'] = '/uploads/products/' . $fileName;
+        }
 
         $validated['slug'] = Str::slug($validated['name']) . '-' . Str::random(4);
         $validated['is_mall'] = $request->boolean('is_mall');
@@ -97,10 +109,32 @@ class AdminProductController extends Controller
             'stock' => 'required|integer|min:0',
             'rating' => 'required|numeric|min:1|max:5',
             'location' => 'required|string|max:255',
-            'image_url' => 'required|url',
+            'image_file' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'description' => 'nullable|string',
             'variants_input' => 'nullable|string',
         ]);
+
+        if ($request->hasFile('image_file')) {
+            // Delete old file if it exists locally
+            if ($product->image_url && str_starts_with($product->image_url, '/uploads/')) {
+                $oldPath = public_path($product->image_url);
+                if (file_exists($oldPath)) {
+                    @unlink($oldPath);
+                }
+            }
+
+            $file = $request->file('image_file');
+            $fileName = time() . '_' . Str::random(8) . '.' . $file->getClientOriginalExtension();
+            
+            if (!file_exists(public_path('uploads/products'))) {
+                mkdir(public_path('uploads/products'), 0755, true);
+            }
+
+            $file->move(public_path('uploads/products'), $fileName);
+            $validated['image_url'] = '/uploads/products/' . $fileName;
+        } else {
+            $validated['image_url'] = $product->image_url;
+        }
 
         if ($validated['name'] !== $product->name) {
             $validated['slug'] = Str::slug($validated['name']) . '-' . Str::random(4);

@@ -145,7 +145,7 @@
     <div class="bg-white rounded-2xl shadow-xs border border-amber-100 p-3.5 md:p-6">
         <div class="flex items-center justify-between mb-3">
             <h2 class="text-xs md:text-base font-bold text-gray-800 uppercase tracking-wider flex items-center gap-2">
-                <i class="fas fa-th-large text-amber-600"></i> Kategori Instrumen Musik
+                <i class="fas fa-th-large text-amber-600"></i> {{ __('Kategori Instrumen Musik') }}
             </h2>
             <span class="text-[10px] text-gray-400 sm:hidden flex items-center gap-1 font-semibold">
                 Geser <i class="fas fa-arrow-right text-[9px]"></i>
@@ -158,7 +158,7 @@
                 <div class="w-10 h-10 md:w-12 md:h-12 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center text-lg md:text-xl mb-1.5 group-hover:scale-110 transition border border-amber-200">
                     <i class="fas fa-globe"></i>
                 </div>
-                <span class="text-[11px] md:text-xs font-semibold line-clamp-1">Semua</span>
+                <span class="text-[11px] md:text-xs font-semibold line-clamp-1">{{ __('Semua') }}</span>
             </button>
             @foreach($categories as $cat)
             <button @click="filterByCategory('{{ $cat->slug }}')" 
@@ -193,20 +193,20 @@
             <div class="bg-white rounded-2xl shadow-xs border border-amber-100 p-5 sticky top-24 space-y-6">
                 <div class="flex items-center justify-between border-b border-gray-100 pb-3">
                     <h3 class="font-bold text-gray-900 text-sm flex items-center gap-2">
-                        <i class="fas fa-filter text-amber-600"></i> FILTER PRODUK
+                        <i class="fas fa-filter text-amber-600"></i> {{ __('FILTER PRODUK') }}
                     </h3>
                     <button @click="resetFilters()" class="text-xs text-amber-600 hover:underline font-semibold">
-                        Reset
+                        {{ __('Reset') }}
                     </button>
                 </div>
 
                 <!-- Filter Category -->
                 <div>
-                    <h4 class="text-xs font-bold text-gray-700 uppercase tracking-wider mb-2.5">Kategori</h4>
+                    <h4 class="text-xs font-bold text-gray-700 uppercase tracking-wider mb-2.5">{{ __('Kategori') }}</h4>
                     <div class="space-y-1 text-xs font-medium">
                         <label class="flex items-center gap-2 cursor-pointer p-1.5 rounded hover:bg-amber-50">
                             <input type="radio" name="cat" value="all" x-model="selectedCategory" @change="applyFilters()" class="text-amber-600 focus:ring-amber-500 accent-amber-500">
-                            <span>Semua Kategori</span>
+                            <span>{{ __('Semua Kategori') }}</span>
                         </label>
                         @foreach($categories as $cat)
                         <label class="flex items-center justify-between cursor-pointer p-1.5 rounded hover:bg-amber-50">
@@ -222,14 +222,14 @@
 
                 <!-- Filter Rating -->
                 <div class="border-t border-gray-100 pt-4">
-                    <h4 class="text-xs font-bold text-gray-700 uppercase tracking-wider mb-2.5">Bintang Rating</h4>
+                    <h4 class="text-xs font-bold text-gray-700 uppercase tracking-wider mb-2.5">{{ __('Bintang Rating') }}</h4>
                     <div class="space-y-1 text-xs">
                         <template x-for="stars in [5, 4, 3]" :key="stars">
                             <label class="flex items-center gap-2 cursor-pointer p-1 rounded hover:bg-amber-50">
                                 <input type="radio" name="rating_filter" :value="stars" x-model="ratingFilter" @change="applyFilters()" class="text-amber-600 focus:ring-amber-500 accent-amber-500">
                                 <div class="flex items-center text-amber-500 text-xs">
                                     <template x-for="i in stars"><i class="fas fa-star"></i></template>
-                                    <span class="ml-1.5 text-gray-600 font-semibold" x-text="stars + ' Bintang & Ke atas'"></span>
+                                    <span class="ml-1.5 text-gray-600 font-semibold" x-text="stars + ' ' + (document.documentElement.lang === 'en' ? 'Stars & Up' : 'Bintang & Ke atas')"></span>
                                 </div>
                             </label>
                         </template>
@@ -238,13 +238,13 @@
 
                 <!-- Filter Price Range -->
                 <div class="border-t border-gray-100 pt-4">
-                    <h4 class="text-xs font-bold text-gray-700 uppercase tracking-wider mb-2.5">Batas Harga (Rp)</h4>
+                    <h4 class="text-xs font-bold text-gray-700 uppercase tracking-wider mb-2.5">{{ __('Batas Harga (Rp)') }}</h4>
                     <div class="grid grid-cols-2 gap-2 mb-3">
                         <input type="number" x-model="minPrice" placeholder="MIN" class="w-full p-2 border border-gray-200 rounded text-xs focus:ring-amber-500 focus:border-amber-500">
                         <input type="number" x-model="maxPrice" placeholder="MAX" class="w-full p-2 border border-gray-200 rounded text-xs focus:ring-amber-500 focus:border-amber-500">
                     </div>
                     <button @click="applyFilters()" class="w-full py-2.5 bg-amber-500 hover:bg-amber-600 text-slate-950 text-xs font-extrabold rounded-xl transition shadow-xs">
-                        Terapkan Harga
+                        {{ __('Terapkan Harga') }}
                     </button>
                 </div>
             </div>
@@ -322,10 +322,10 @@
 
                 <div class="pt-4 border-t border-gray-100 space-y-2">
                     <button @click="applyFilters(); showMobileFilter = false;" class="w-full py-3 bg-amber-500 hover:bg-amber-600 text-slate-950 text-xs font-extrabold rounded-xl transition shadow-md">
-                        Terapkan Filter
+                        {{ __('Terapkan Filter') }}
                     </button>
                     <button @click="resetFilters(); showMobileFilter = false;" class="w-full py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-bold rounded-xl transition">
-                        Reset Semua Filter
+                        {{ __('Reset Semua Filter') }}
                     </button>
                 </div>
             </div>
@@ -344,32 +344,32 @@
                     </button>
 
                     <div class="hidden sm:flex items-center gap-2">
-                        <span class="text-gray-500 font-semibold">Urutkan:</span>
+                        <span class="text-gray-500 font-semibold">{{ __('Urutkan:') }}</span>
                         <button @click="setSort('popular')" 
                                 :class="sort === 'popular' ? 'bg-amber-500 text-slate-950 font-extrabold shadow-xs' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'"
                                 class="px-3.5 py-1.5 rounded-xl font-bold transition">
-                            Terlaris
+                            {{ __('Terlaris') }}
                         </button>
                         <button @click="setSort('latest')" 
                                 :class="sort === 'latest' ? 'bg-amber-500 text-slate-950 font-extrabold shadow-xs' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'"
                                 class="px-3.5 py-1.5 rounded-xl font-bold transition">
-                            Terbaru
+                            {{ __('Terbaru') }}
                         </button>
                         <button @click="setSort('discount')" 
                                 :class="sort === 'discount' ? 'bg-amber-500 text-slate-950 font-extrabold shadow-xs' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'"
                                 class="px-3.5 py-1.5 rounded-xl font-bold transition">
-                            Diskon
+                            {{ __('Diskon') }}
                         </button>
                     </div>
                 </div>
 
                 <div class="flex items-center gap-2">
                     <select x-model="sort" @change="applyFilters()" class="bg-gray-100 border-none text-[11px] md:text-xs font-bold text-gray-700 rounded-xl px-2.5 py-1.5 focus:ring-amber-500">
-                        <option value="popular">Terpopular</option>
-                        <option value="latest">Terbaru</option>
-                        <option value="discount">Diskon Terbesar</option>
-                        <option value="price_asc">Harga: Low to High</option>
-                        <option value="price_desc">Harga: High to Low</option>
+                        <option value="popular">{{ __('Terpopular') }}</option>
+                        <option value="latest">{{ __('Terbaru') }}</option>
+                        <option value="discount">{{ __('Diskon Terbesar') }}</option>
+                        <option value="price_asc">{{ __('Harga: Low to High') }}</option>
+                        <option value="price_desc">{{ __('Harga: High to Low') }}</option>
                     </select>
                 </div>
             </div>
@@ -379,7 +379,7 @@
                 <div class="inline-block animate-spin text-amber-600 text-4xl mb-2">
                     <i class="fas fa-spinner"></i>
                 </div>
-                <p class="text-xs text-gray-500 font-medium">Memuat catalog produk...</p>
+                <p class="text-xs text-gray-500 font-medium">{{ __('Memuat catalog produk...') }}</p>
             </div>
 
             <!-- Empty State -->
@@ -387,10 +387,10 @@
                 <div class="w-20 h-20 mx-auto bg-amber-50 rounded-full flex items-center justify-center text-amber-600 text-3xl mb-4 border border-amber-100">
                     <i class="fas fa-box-open"></i>
                 </div>
-                <h3 class="text-base font-bold text-gray-800 mb-1">Produk Tidak Ditemukan</h3>
-                <p class="text-xs text-gray-500 mb-4">Coba sesuaikan pencarian atau filter kata kunci Anda.</p>
+                <h3 class="text-base font-bold text-gray-800 mb-1">{{ __('Produk Tidak Ditemukan') }}</h3>
+                <p class="text-xs text-gray-500 mb-4">{{ __('Coba sesuaikan pencarian atau filter kata kunci Anda.') }}</p>
                 <button @click="resetFilters()" class="px-4 py-2 bg-amber-500 text-slate-950 text-xs font-extrabold rounded-xl shadow-xs hover:bg-amber-600 transition">
-                    Lihat Semua Produk
+                    {{ __('Lihat Semua Produk') }}
                 </button>
             </div>
 
@@ -696,14 +696,22 @@
                 <div class="p-4 border-t border-gray-100 bg-gray-50 space-y-3">
                     <div>
                         <div class="flex gap-2">
-                            <input type="text" x-model="voucherCode" placeholder="Masukkan kode voucher (ONGKIRFREE / SHOPEE10K)" class="w-full text-xs p-2 border rounded-xl focus:ring-amber-500 uppercase">
+                            <input type="text" x-model="voucherCode" placeholder="Masukkan kode promo" class="w-full text-xs p-2 border rounded-xl focus:ring-amber-500 uppercase">
                             <button @click="$store.cart.applyVoucher(voucherCode)" class="px-3 py-2 bg-gray-800 text-white text-xs font-bold rounded-xl hover:bg-black transition">
                                 Pakai
                             </button>
                         </div>
-                        <template x-if="$store.cart.voucher">
-                            <p class="text-[11px] text-emerald-600 font-bold mt-1 flex items-center gap-1">
-                                <i class="fas fa-check-circle"></i> Voucher "<span x-text="$store.cart.voucher"></span>" berhasil dipasang!
+                        <template x-if="$store.cart.promoMessage">
+                            <div class="text-[11px] text-emerald-600 font-bold mt-1.5 flex items-center justify-between gap-1 bg-emerald-50 p-1.5 rounded-lg border border-emerald-200">
+                                <span class="flex items-center gap-1">
+                                    <i class="fas fa-check-circle"></i> <span x-text="$store.cart.promoMessage"></span>
+                                </span>
+                                <button @click="$store.cart.removeVoucher(); voucherCode = ''" class="text-red-500 hover:text-red-700 text-[10px] font-bold underline shrink-0">Hapus</button>
+                            </div>
+                        </template>
+                        <template x-if="$store.cart.promoError">
+                            <p class="text-[11px] text-red-600 font-bold mt-1 flex items-center gap-1">
+                                <i class="fas fa-circle-exclamation"></i> <span x-text="$store.cart.promoError"></span>
                             </p>
                         </template>
                     </div>
@@ -853,10 +861,14 @@
         Alpine.store('cart', {
             items: JSON.parse(localStorage.getItem('proats_cart') || '[]'),
             voucher: localStorage.getItem('proats_voucher') || '',
+            calculatedDiscount: parseFloat(localStorage.getItem('proats_discount') || '0'),
+            promoMessage: '',
+            promoError: '',
 
             save() {
                 localStorage.setItem('proats_cart', JSON.stringify(this.items));
                 localStorage.setItem('proats_voucher', this.voucher);
+                localStorage.setItem('proats_discount', this.calculatedDiscount.toString());
             },
 
             addItem(product, variant = '', qty = 1) {
@@ -874,11 +886,13 @@
                     });
                 }
                 this.save();
+                if (this.voucher) this.revalidateVoucher();
             },
 
             removeItem(index) {
                 this.items.splice(index, 1);
                 this.save();
+                if (this.voucher) this.revalidateVoucher();
             },
 
             updateQty(index, qty) {
@@ -887,6 +901,7 @@
                 } else {
                     this.items[index].qty = qty;
                     this.save();
+                    if (this.voucher) this.revalidateVoucher();
                 }
             },
 
@@ -899,11 +914,7 @@
             },
 
             discount() {
-                if (!this.voucher) return 0;
-                if (this.voucher.toUpperCase() === 'ONGKIRFREE') return 20000;
-                if (this.voucher.toUpperCase() === 'SHOPEE10K') return 10000;
-                if (this.voucher.toUpperCase() === 'DISKON50') return this.subtotal() * 0.5;
-                return 0;
+                return this.calculatedDiscount || 0;
             },
 
             total() {
@@ -912,13 +923,82 @@
             },
 
             applyVoucher(code) {
-                this.voucher = code.trim();
+                const trimmed = code.trim().toUpperCase();
+                if (!trimmed) {
+                    this.promoError = 'Masukkan kode promo terlebih dahulu.';
+                    this.promoMessage = '';
+                    return;
+                }
+                this.promoError = '';
+                this.promoMessage = '';
+
+                fetch('/api/promo/validate', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    body: JSON.stringify({ code: trimmed, subtotal: this.subtotal() })
+                })
+                .then(res => res.json().then(data => ({ ok: res.ok, data })))
+                .then(({ ok, data }) => {
+                    if (ok && data.valid) {
+                        this.voucher = data.code;
+                        this.calculatedDiscount = data.calculated_discount;
+                        this.promoMessage = data.message;
+                        this.promoError = '';
+                    } else {
+                        this.voucher = '';
+                        this.calculatedDiscount = 0;
+                        this.promoError = data.message || 'Kode promo tidak valid.';
+                        this.promoMessage = '';
+                    }
+                    this.save();
+                })
+                .catch(() => {
+                    this.promoError = 'Gagal memvalidasi kode promo. Coba lagi.';
+                    this.promoMessage = '';
+                });
+            },
+
+            revalidateVoucher() {
+                if (!this.voucher) return;
+                fetch('/api/promo/validate', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    body: JSON.stringify({ code: this.voucher, subtotal: this.subtotal() })
+                })
+                .then(res => res.json().then(data => ({ ok: res.ok, data })))
+                .then(({ ok, data }) => {
+                    if (ok && data.valid) {
+                        this.calculatedDiscount = data.calculated_discount;
+                    } else {
+                        this.calculatedDiscount = 0;
+                    }
+                    this.save();
+                })
+                .catch(() => {});
+            },
+
+            removeVoucher() {
+                this.voucher = '';
+                this.calculatedDiscount = 0;
+                this.promoMessage = '';
+                this.promoError = '';
                 this.save();
             },
 
             clear() {
                 this.items = [];
                 this.voucher = '';
+                this.calculatedDiscount = 0;
+                this.promoMessage = '';
+                this.promoError = '';
                 this.save();
             }
         });

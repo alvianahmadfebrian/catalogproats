@@ -39,6 +39,12 @@ class Product extends Model
         'variants' => 'array',
     ];
 
+    protected $appends = [
+        'formatted_price',
+        'formatted_original_price',
+        'formatted_sold',
+    ];
+
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);

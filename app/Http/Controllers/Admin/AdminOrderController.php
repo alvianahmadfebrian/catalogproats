@@ -40,6 +40,19 @@ class AdminOrderController extends Controller
 
         $order->update(['status' => $validated['status']]);
 
+        // Notify user about status change
+        if ($order->user) {
+            $statusText = $validated['status'] === 'completed' ? 'Selesai' : ($validated['status'] === 'cancelled' ? 'Dibatalkan' : 'Pending');
+            $icon = $validated['status'] === 'completed' ? 'fas fa-circle-check text-emerald-600' : ($validated['status'] === 'cancelled' ? 'fas fa-circle-xmark text-red-600' : 'fas fa-clock text-amber-600');
+            
+            $order->user->notify(new \App\Notifications\GeneralNotification(
+                "Status Pesanan #{$order->id} Diperbarui",
+                "Pesanan Anda untuk '{$order->product->name}' telah diperbarui menjadi " . strtoupper($statusText),
+                route('profile.index') . '#orders-tab',
+                $icon
+            ));
+        }
+
         return back()->with('success', "Status pesanan #{$order->id} berhasil diperbarui ke " . strtoupper($validated['status']));
     }
 }

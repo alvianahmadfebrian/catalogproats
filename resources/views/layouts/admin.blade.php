@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="{{ App::getLocale() }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -58,46 +58,46 @@
                 <!-- Section 1: UTAMA & ANALITIK -->
                 <div class="space-y-1">
                     <div class="px-3 text-[10px] font-extrabold text-amber-700/80 uppercase tracking-widest">
-                        UTAMA & ANALITIK
+                        {{ __('UTAMA & ANALITIK') }}
                     </div>
                     <a href="{{ route('admin.dashboard') }}" 
                        class="flex items-center gap-3 px-3 py-2 rounded-xl transition {{ request()->routeIs('admin.dashboard') ? 'bg-amber-500 text-slate-950 font-extrabold shadow-xs' : 'text-gray-600 hover:bg-amber-50 hover:text-amber-700' }}">
-                        <i class="fas fa-chart-pie w-4 text-center"></i> Ringkasan Dashboard
+                        <i class="fas fa-chart-pie w-4 text-center"></i> {{ __('Ringkasan Dashboard') }}
                     </a>
                 </div>
 
                 <!-- Section 2: KELOLA KATALOG USER -->
                 <div class="space-y-1">
                     <div class="px-3 text-[10px] font-extrabold text-amber-700/80 uppercase tracking-widest">
-                        KELOLA KATALOG USER
+                        {{ __('KELOLA KATALOG USER') }}
                     </div>
                     <a href="{{ route('admin.products.index') }}" 
                        class="flex items-center gap-3 px-3 py-2 rounded-xl transition {{ request()->routeIs('admin.products.index') ? 'bg-amber-500 text-slate-950 font-extrabold shadow-xs' : 'text-gray-600 hover:bg-amber-50 hover:text-amber-700' }}">
-                        <i class="fas fa-boxes-stacked w-4 text-center"></i> Kelola Semua Produk
+                        <i class="fas fa-boxes-stacked w-4 text-center"></i> {{ __('Kelola Semua Produk') }}
                     </a>
                     <a href="{{ route('admin.products.create') }}" 
                        class="flex items-center gap-3 px-3 py-2 rounded-xl transition {{ request()->routeIs('admin.products.create') ? 'bg-amber-500 text-slate-950 font-extrabold shadow-xs' : 'text-gray-600 hover:bg-amber-50 hover:text-amber-700' }}">
-                        <i class="fas fa-square-plus w-4 text-center"></i> Tambah Produk Baru
+                        <i class="fas fa-square-plus w-4 text-center"></i> {{ __('Tambah Produk Baru') }}
                     </a>
                     <a href="{{ route('admin.categories.index') }}" 
                        class="flex items-center gap-3 px-3 py-2 rounded-xl transition {{ request()->routeIs('admin.categories.*') ? 'bg-amber-500 text-slate-950 font-extrabold shadow-xs' : 'text-gray-600 hover:bg-amber-50 hover:text-amber-700' }}">
-                        <i class="fas fa-tags w-4 text-center"></i> Kategori Alat Musik
+                        <i class="fas fa-tags w-4 text-center"></i> {{ __('Kategori Alat Musik') }}
                     </a>
                 </div>
 
                 <!-- Section 3: PENJUALAN & USER -->
                 <div class="space-y-1">
                     <div class="px-3 text-[10px] font-extrabold text-amber-700/80 uppercase tracking-widest">
-                        PENJUALAN & USER
+                        {{ __('PENJUALAN & USER') }}
                     </div>
                     <a href="{{ route('admin.orders.index') }}" 
                        class="flex items-center gap-3 px-3 py-2 rounded-xl transition {{ request()->routeIs('admin.orders.*') ? 'bg-amber-500 text-slate-950 font-extrabold shadow-xs' : 'text-gray-600 hover:bg-amber-50 hover:text-amber-700' }}">
-                        <i class="fas fa-receipt w-4 text-center"></i> Transaksi & Order Pembeli
+                        <i class="fas fa-receipt w-4 text-center"></i> {{ __('Transaksi & Order Pembeli') }}
                     </a>
                     <a href="{{ route('admin.chat.index') }}" 
                        class="flex items-center justify-between px-3 py-2 rounded-xl transition {{ request()->routeIs('admin.chat.*') ? 'bg-amber-500 text-slate-950 font-extrabold shadow-xs' : 'text-gray-600 hover:bg-amber-50 hover:text-amber-700' }}">
                         <div class="flex items-center gap-3">
-                            <i class="fas fa-comments w-4 text-center"></i> Live Chat Pelanggan
+                            <i class="fas fa-comments w-4 text-center"></i> {{ __('Live Chat Pelanggan') }}
                         </div>
                         <span x-data="{ unread: 0 }" 
                               x-init="fetch('/cms-admin/chat/unread').then(r=>r.json()).then(d=>unread=d.unread_count); setInterval(()=>fetch('/cms-admin/chat/unread').then(r=>r.json()).then(d=>unread=d.unread_count), 4000)"
@@ -108,29 +108,33 @@
                     </a>
                     <a href="{{ route('admin.reviews.index') }}" 
                        class="flex items-center gap-3 px-3 py-2 rounded-xl transition {{ request()->routeIs('admin.reviews.*') ? 'bg-amber-500 text-slate-950 font-extrabold shadow-xs' : 'text-gray-600 hover:bg-amber-50 hover:text-amber-700' }}">
-                        <i class="fas fa-star w-4 text-center"></i> Ulasan & Rating User
+                        <i class="fas fa-star w-4 text-center"></i> {{ __('Ulasan & Rating User') }}
                     </a>
                 </div>
 
-                <!-- Section 4: PENGATURAN HALAMAN & SISTEM -->
+                <!-- Section 4: PROMO & PENGATURAN SISTEM -->
                 <div class="space-y-1">
                     <div class="px-3 text-[10px] font-extrabold text-amber-700/80 uppercase tracking-widest">
-                        PENGATURAN SISTEM
+                        {{ __('PROMO & PENGATURAN') }}
                     </div>
+                    <a href="{{ route('admin.promos.index') }}" 
+                       class="flex items-center gap-3 px-3 py-2 rounded-xl transition {{ request()->routeIs('admin.promos.*') ? 'bg-amber-500 text-slate-950 font-extrabold shadow-xs' : 'text-gray-600 hover:bg-amber-50 hover:text-amber-700' }}">
+                        <i class="fas fa-ticket-simple w-4 text-center"></i> {{ __('Kode Promo / Voucher') }}
+                    </a>
                     <a href="{{ route('admin.banners.index') }}" 
                        class="flex items-center gap-3 px-3 py-2 rounded-xl transition {{ request()->routeIs('admin.banners.*') ? 'bg-amber-500 text-slate-950 font-extrabold shadow-xs' : 'text-gray-600 hover:bg-amber-50 hover:text-amber-700' }}">
-                        <i class="fas fa-images w-4 text-center"></i> Hero Banner Slider
+                        <i class="fas fa-images w-4 text-center"></i> {{ __('Hero Banner Slider') }}
                     </a>
                     <a href="{{ route('admin.settings.index') }}" 
                        class="flex items-center gap-3 px-3 py-2 rounded-xl transition {{ request()->routeIs('admin.settings.*') ? 'bg-amber-500 text-slate-950 font-extrabold shadow-xs' : 'text-gray-600 hover:bg-amber-50 hover:text-amber-700' }}">
-                        <i class="fas fa-sliders w-4 text-center"></i> Pengaturan Keseluruhan
+                        <i class="fas fa-sliders w-4 text-center"></i> {{ __('Pengaturan Keseluruhan') }}
                     </a>
                 </div>
 
                 <div class="border-t border-amber-100 pt-2">
                     <a href="{{ route('catalog.index') }}" target="_blank"
                        class="flex items-center gap-3 px-3 py-2 rounded-xl text-gray-500 hover:bg-amber-50 hover:text-amber-700 transition">
-                        <i class="fas fa-external-link-alt w-4 text-center"></i> Lihat Katalog User <i class="fas fa-arrow-up-right-from-square text-[9px] ml-auto"></i>
+                        <i class="fas fa-external-link-alt w-4 text-center"></i> {{ __('Lihat Katalog User') }} <i class="fas fa-arrow-up-right-from-square text-[9px] ml-auto"></i>
                     </a>
                 </div>
             </nav>
@@ -150,7 +154,7 @@
                 </div>
                 <form action="{{ route('admin.logout') }}" method="POST">
                     @csrf
-                    <button type="submit" class="p-1.5 text-gray-400 hover:text-amber-600 transition" title="Logout">
+                    <button type="submit" class="p-1.5 text-gray-400 hover:text-amber-600 transition" title="{{ __('Keluar') }}">
                         <i class="fas fa-right-from-bracket"></i>
                     </button>
                 </form>
@@ -171,11 +175,98 @@
             </div>
             
             <div class="flex items-center gap-3">
-                <a href="{{ route('admin.chat.index') }}" class="px-3 py-1.5 bg-amber-50 hover:bg-amber-100 text-amber-700 text-xs font-bold rounded-xl transition flex items-center gap-2 border border-amber-200">
-                    <i class="fas fa-comments"></i> Chat Pelanggan
-                </a>
+                <!-- Admin Language Switcher Dropdown (Alpine.js) -->
+                <div x-data="{ open: false }" class="relative inline-block text-left" @click.outside="open = false">
+                    <button @click="open = !open" type="button" class="flex items-center gap-1.5 px-3 py-1.5 bg-amber-50 hover:bg-amber-100 text-amber-700 text-xs font-bold rounded-xl transition border border-amber-200 focus:outline-none animate-pulse-slow" id="admin-language-switcher" aria-expanded="true" aria-haspopup="true">
+                        <i class="fas fa-globe text-amber-600"></i>
+                        <span>{{ App::getLocale() === 'en' ? 'EN' : 'ID' }}</span>
+                        <i class="fas fa-chevron-down text-[9px] text-amber-600/70"></i>
+                    </button>
+                    <div x-show="open" 
+                         x-transition:enter="transition ease-out duration-100" 
+                         x-transition:enter-start="transform opacity-0 scale-95" 
+                         x-transition:enter-end="transform opacity-100 scale-100" 
+                         x-transition:leave="transition ease-in duration-75" 
+                         x-transition:leave-start="transform opacity-100 scale-100" 
+                         x-transition:leave-end="transform opacity-0 scale-95" 
+                         class="origin-top-right absolute right-0 mt-2 w-36 rounded-xl shadow-lg bg-white ring-1 ring-black/5 focus:outline-none z-50 overflow-hidden py-1 border border-amber-100 text-xs" 
+                         role="menu" 
+                         aria-orientation="vertical" 
+                         aria-labelledby="admin-language-switcher" 
+                         x-cloak>
+                        <div class="py-0.5" role="none">
+                            <a href="{{ route('lang.switch', 'id') }}" class="flex items-center gap-2 px-3 py-2 text-gray-700 hover:bg-amber-50 hover:text-amber-900 transition font-medium" role="menuitem">
+                                <span>🇮🇩</span> Indo (ID)
+                            </a>
+                            <a href="{{ route('lang.switch', 'en') }}" class="flex items-center gap-2 px-3 py-2 text-gray-700 hover:bg-amber-50 hover:text-amber-900 transition font-medium" role="menuitem">
+                                <span>🇬🇧</span> English (EN)
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+               <!-- Admin Notification Dropdown -->
+               <div x-data="notificationDropdown()" x-init="initNotifications()" class="relative inline-block text-left" @click.outside="open = false">
+                   <button @click="open = !open" type="button" class="flex items-center gap-1.5 px-3 py-1.5 bg-amber-50 hover:bg-amber-100 text-amber-700 text-xs font-bold rounded-xl transition border border-amber-200 focus:outline-none relative" id="admin-notifications">
+                       <i class="far fa-bell text-amber-600"></i>
+                       <!-- Unread Count Badge -->
+                       <template x-if="unreadCount > 0">
+                           <span class="absolute -top-1 -right-1 bg-red-500 text-white font-extrabold text-[8px] w-4.5 h-4.5 rounded-full border-2 border-white flex items-center justify-center shadow-2xs" x-text="unreadCount"></span>
+                       </template>
+                   </button>
+                   <div x-show="open" 
+                        x-transition:enter="transition ease-out duration-100" 
+                        x-transition:enter-start="transform opacity-0 scale-95" 
+                        x-transition:enter-end="transform opacity-100 scale-100" 
+                        x-transition:leave="transition ease-in duration-75" 
+                        x-transition:leave-start="transform opacity-100 scale-100" 
+                        x-transition:leave-end="transform opacity-0 scale-95" 
+                        class="origin-top-right absolute right-0 mt-2 w-80 rounded-xl shadow-lg bg-white ring-1 ring-black/5 focus:outline-none z-50 overflow-hidden py-1 border border-amber-100 text-xs" 
+                        role="menu" 
+                        aria-orientation="vertical" 
+                        aria-labelledby="admin-notifications" 
+                        x-cloak>
+                       <div class="p-3 bg-amber-50/50 border-b border-amber-100 flex items-center justify-between font-bold">
+                           <span class="text-gray-800">{{ __('Notifikasi Sistem') }}</span>
+                           <template x-if="unreadCount > 0">
+                               <button @click="markAllAsRead()" class="text-[10px] text-amber-700 hover:underline">
+                                   {{ __('Tandai Semua Dibaca') }}
+                               </button>
+                           </template>
+                       </div>
+                       <div class="max-h-64 overflow-y-auto divide-y divide-gray-100">
+                           <!-- Empty State -->
+                           <template x-if="notifications.length === 0">
+                               <div class="p-6 text-center text-gray-400">
+                                   <i class="far fa-bell text-xl mb-1 block"></i>
+                                   <span>{{ __('Tidak ada notifikasi') }}</span>
+                               </div>
+                           </template>
+                           <!-- Notification List -->
+                           <template x-for="item in notifications" :key="item.id">
+                               <div class="p-3 hover:bg-amber-50/30 transition flex gap-3 items-start cursor-pointer text-left" :class="item.read_at ? 'opacity-70' : 'bg-amber-50/10 font-semibold'" @click="clickNotification(item)">
+                                   <div class="w-7 h-7 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center shrink-0 text-[11px]">
+                                       <i :class="item.icon"></i>
+                                   </div>
+                                   <div class="flex-grow min-w-0">
+                                       <div class="text-gray-800 text-[11px] leading-snug" x-text="item.title"></div>
+                                       <div class="text-gray-500 text-[10px] mt-0.5" x-text="item.message"></div>
+                                       <div class="text-gray-400 text-[9px] mt-1" x-text="item.created_at"></div>
+                                   </div>
+                                   <template x-if="!item.read_at">
+                                       <div class="w-1.5 h-1.5 rounded-full bg-amber-600 mt-1.5 shrink-0"></div>
+                                   </template>
+                               </div>
+                           </template>
+                       </div>
+                   </div>
+               </div>
+
+               <a href="{{ route('admin.chat.index') }}" class="px-3 py-1.5 bg-amber-50 hover:bg-amber-100 text-amber-700 text-xs font-bold rounded-xl transition flex items-center gap-2 border border-amber-200">
+                   <i class="fas fa-comments"></i> {{ __('Chat Pelanggan') }}
+               </a>
                 <span class="text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
-                    <i class="fas fa-circle text-[6px] animate-pulse mr-1"></i> Online
+                    <i class="fas fa-circle text-[6px] animate-pulse mr-1"></i> {{ __('Online') }}
                 </span>
             </div>
         </header>
@@ -205,6 +296,74 @@
         </main>
     </div>
 
+    <script>
+        function notificationDropdown() {
+            return {
+                open: false,
+                unreadCount: 0,
+                notifications: [],
+
+                initNotifications() {
+                    this.fetchNotifications();
+                    setInterval(() => this.fetchNotifications(), 15000);
+                },
+
+                fetchNotifications() {
+                    fetch('{{ route('notifications.index') }}')
+                        .then(r => r.json())
+                        .then(d => {
+                            this.unreadCount = d.unread_count;
+                            this.notifications = d.notifications;
+                        })
+                        .catch(() => {});
+                },
+
+                clickNotification(item) {
+                    if (!item.read_at) {
+                        fetch(`/api/notifications/${item.id}/read`, {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                'Content-Type': 'application/json'
+                            }
+                        })
+                        .then(r => r.json())
+                        .then(() => {
+                            this.fetchNotifications();
+                            if (item.url && item.url !== '#') {
+                                window.location.href = item.url;
+                            }
+                        })
+                        .catch(() => {
+                            if (item.url && item.url !== '#') {
+                                window.location.href = item.url;
+                            }
+                        });
+                    } else {
+                        if (item.url && item.url !== '#') {
+                            window.location.href = item.url;
+                        }
+                    }
+                    this.open = false;
+                },
+
+                markAllAsRead() {
+                    fetch('/api/notifications/read-all', {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                            'Content-Type': 'application/json'
+                        }
+                    })
+                    .then(r => r.json())
+                    .then(() => {
+                        this.fetchNotifications();
+                    })
+                    .catch(() => {});
+                }
+            }
+        }
+    </script>
     @yield('scripts')
 </body>
 </html>

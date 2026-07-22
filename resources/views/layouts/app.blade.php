@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="{{ App::getLocale() }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -103,17 +103,111 @@
                 <span class="text-slate-950/30">|</span>
                 <div class="flex items-center space-x-2 text-slate-950">
                     <span>Ikuti kami:</span>
-                    <a href="#" class="hover:text-amber-900"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#" class="hover:text-amber-900"><i class="fab fa-instagram"></i></a>
-                    <a href="#" class="hover:text-amber-900"><i class="fab fa-tiktok"></i></a>
+                    @if(\App\Models\Setting::get('social_facebook'))
+                        <a href="{{ \App\Models\Setting::get('social_facebook') }}" target="_blank" class="hover:text-amber-900"><i class="fab fa-facebook-f"></i></a>
+                    @endif
+                    @if(\App\Models\Setting::get('social_instagram'))
+                        <a href="{{ \App\Models\Setting::get('social_instagram') }}" target="_blank" class="hover:text-amber-900"><i class="fab fa-instagram"></i></a>
+                    @endif
+                    @if(\App\Models\Setting::get('social_tiktok'))
+                        <a href="{{ \App\Models\Setting::get('social_tiktok') }}" target="_blank" class="hover:text-amber-900"><i class="fab fa-tiktok"></i></a>
+                    @endif
                 </div>
             </div>
 
             <!-- Right: Links & Account -->
             <div class="flex items-center space-x-5 font-semibold text-slate-950">
-                <a href="#" class="flex items-center gap-1 hover:text-amber-900"><i class="far fa-bell"></i> Notifikasi</a>
-                <a href="#" class="flex items-center gap-1 hover:text-amber-900"><i class="far fa-circle-question"></i> Bantuan</a>
-                <a href="#" class="flex items-center gap-1 hover:text-amber-900"><i class="fas fa-globe"></i> Bahasa Indonesia</a>
+                <!-- Notification Dropdown -->
+                @auth
+                <div x-data="notificationDropdown()" x-init="initNotifications()" class="relative inline-block text-left" @click.outside="open = false">
+                    <button @click="open = !open" type="button" class="flex items-center gap-1 hover:text-amber-900 focus:outline-none transition py-1 text-slate-950 font-semibold relative" id="notification-menu">
+                        <i class="far fa-bell text-amber-900 text-base"></i>
+                        <span>{{ __('Notifikasi') }}</span>
+                        <!-- Unread Count Badge -->
+                        <template x-if="unreadCount > 0">
+                            <span class="absolute -top-1 -right-2 bg-red-500 text-white font-extrabold text-[9px] px-1.5 py-0.2 rounded-full border border-white shadow-2xs min-w-[15px] text-center animate-pulse" x-text="unreadCount"></span>
+                        </template>
+                    </button>
+                    <!-- Dropdown Pane -->
+                    <div x-show="open" 
+                         x-transition:enter="transition ease-out duration-100" 
+                         x-transition:enter-start="transform opacity-0 scale-95" 
+                         x-transition:enter-end="transform opacity-100 scale-100" 
+                         x-transition:leave="transition ease-in duration-75" 
+                         x-transition:leave-start="transform opacity-100 scale-100" 
+                         x-transition:leave-end="transform opacity-0 scale-95" 
+                         class="origin-top-right absolute right-0 mt-2 w-80 rounded-xl shadow-lg bg-white ring-1 ring-black/5 focus:outline-none z-50 overflow-hidden border border-amber-100 text-xs" 
+                         x-cloak>
+                        <div class="p-3 bg-amber-50/50 border-b border-amber-100 flex items-center justify-between font-bold">
+                            <span class="text-gray-800">{{ __('Notifikasi Anda') }}</span>
+                            <template x-if="unreadCount > 0">
+                                <button @click="markAllAsRead()" class="text-[10px] text-amber-700 hover:underline">
+                                    {{ __('Tandai Semua Dibaca') }}
+                                </button>
+                            </template>
+                        </div>
+                        <div class="max-h-64 overflow-y-auto divide-y divide-gray-100">
+                            <!-- Empty State -->
+                            <template x-if="notifications.length === 0">
+                                <div class="p-6 text-center text-gray-400">
+                                    <i class="far fa-bell text-xl mb-1 block"></i>
+                                    <span>{{ __('Tidak ada notifikasi') }}</span>
+                                </div>
+                            </template>
+                            <!-- Notification List -->
+                            <template x-for="item in notifications" :key="item.id">
+                                <div class="p-3 hover:bg-amber-50/30 transition flex gap-3 items-start cursor-pointer" :class="item.read_at ? 'opacity-70' : 'bg-amber-50/10 font-semibold'" @click="clickNotification(item)">
+                                    <div class="w-7 h-7 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center shrink-0 text-[11px]">
+                                        <i :class="item.icon"></i>
+                                    </div>
+                                    <div class="flex-grow min-w-0 text-left">
+                                        <div class="text-gray-800 text-[11px] leading-snug" x-text="item.title"></div>
+                                        <div class="text-gray-500 text-[10px] mt-0.5 line-clamp-2" x-text="item.message"></div>
+                                        <div class="text-gray-400 text-[9px] mt-1" x-text="item.created_at"></div>
+                                    </div>
+                                    <template x-if="!item.read_at">
+                                        <div class="w-1.5 h-1.5 rounded-full bg-amber-600 mt-1.5 shrink-0"></div>
+                                    </template>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+                @else
+                <a href="{{ route('login') }}" class="flex items-center gap-1 hover:text-amber-900"><i class="far fa-bell"></i> {{ __('Notifikasi') }}</a>
+                @endauth
+                <button @click.prevent="$store.helpModal.open()" class="flex items-center gap-1 hover:text-amber-900 focus:outline-none"><i class="far fa-circle-question text-amber-900 text-base"></i> {{ __('Bantuan') }}</button>
+                
+                <!-- Language Switcher Dropdown (Alpine.js) -->
+                <div x-data="{ open: false }" class="relative inline-block text-left" @click.outside="open = false">
+                    <button @click="open = !open" type="button" class="flex items-center gap-1.5 hover:text-amber-900 focus:outline-none transition py-1 text-slate-950 font-semibold" id="language-switcher-menu" aria-expanded="true" aria-haspopup="true">
+                        <i class="fas fa-globe text-amber-900"></i>
+                        <span>{{ App::getLocale() === 'en' ? 'English' : 'Bahasa Indonesia' }}</span>
+                        <i class="fas fa-chevron-down text-[10px] ml-0.5 text-slate-950/60"></i>
+                    </button>
+                    <div x-show="open" 
+                         x-transition:enter="transition ease-out duration-100" 
+                         x-transition:enter-start="transform opacity-0 scale-95" 
+                         x-transition:enter-end="transform opacity-100 scale-100" 
+                         x-transition:leave="transition ease-in duration-75" 
+                         x-transition:leave-start="transform opacity-100 scale-100" 
+                         x-transition:leave-end="transform opacity-0 scale-95" 
+                         class="origin-top-right absolute right-0 mt-2 w-44 rounded-xl shadow-lg bg-white ring-1 ring-black/5 focus:outline-none z-50 overflow-hidden py-1 border border-amber-100" 
+                         role="menu" 
+                         aria-orientation="vertical" 
+                         aria-labelledby="language-switcher-menu" 
+                         x-cloak>
+                        <div class="py-0.5" role="none">
+                            <a href="{{ route('lang.switch', 'id') }}" class="flex items-center gap-2 px-4 py-2 text-xs text-gray-700 hover:bg-amber-50 hover:text-amber-900 transition font-medium" role="menuitem">
+                                <span class="text-sm">🇮🇩</span> Bahasa Indonesia
+                            </a>
+                            <a href="{{ route('lang.switch', 'en') }}" class="flex items-center gap-2 px-4 py-2 text-xs text-gray-700 hover:bg-amber-50 hover:text-amber-900 transition font-medium" role="menuitem">
+                                <span class="text-sm">🇬🇧</span> English
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
                 @auth
                     <div class="flex items-center gap-3 border-l border-slate-950/20 pl-4">
                         <a href="{{ route('profile.index') }}" class="flex items-center gap-2 hover:text-amber-900 transition" title="Pengaturan Profil">
@@ -122,16 +216,16 @@
                         </a>
                         <form action="{{ route('logout') }}" method="POST" class="inline">
                             @csrf
-                            <button type="submit" class="hover:text-amber-900 ml-1 text-xs" title="Keluar / Logout">
+                            <button type="submit" class="hover:text-amber-900 ml-1 text-xs" title="{{ __('Keluar') }}">
                                 <i class="fas fa-sign-out-alt"></i>
                             </button>
                         </form>
                     </div>
                 @else
                     <div class="flex items-center gap-3 border-l border-slate-950/20 pl-4 font-bold text-xs">
-                        <a href="{{ route('login') }}" class="hover:text-amber-900">Masuk</a>
+                        <a href="{{ route('login') }}" class="hover:text-amber-900">{{ __('Masuk') }}</a>
                         <span>|</span>
-                        <a href="{{ route('register') }}" class="hover:text-amber-900">Daftar</a>
+                        <a href="{{ route('register') }}" class="hover:text-amber-900">{{ __('Daftar') }}</a>
                     </div>
                 @endauth
             </div>
@@ -160,7 +254,7 @@
                         <input type="text" 
                                name="search"
                                value="{{ request('search') }}"
-                               placeholder="Cari alat musik..." 
+                               placeholder="{{ __('Cari alat musik...') }}" 
                                class="w-full pl-3 md:pl-4 pr-11 md:pr-14 py-2 md:py-3 bg-amber-50/40 text-gray-900 text-xs md:text-sm rounded-xl focus:outline-none focus:bg-white shadow-xs border border-amber-200 placeholder-gray-400 focus:ring-2 focus:ring-amber-500">
                         <button type="submit" class="absolute right-1 top-1 bottom-1 px-3 md:px-4 bg-amber-500 hover:bg-amber-600 text-slate-950 font-extrabold rounded-lg transition flex items-center justify-center shadow-xs">
                             <i class="fas fa-magnifying-glass text-xs md:text-sm"></i>
@@ -186,8 +280,17 @@
                                 0
                             </span>
                         </div>
-                        <span class="hidden md:inline font-extrabold text-sm">Keranjang</span>
+                        <span class="hidden md:inline font-extrabold text-sm">{{ __('Keranjang') }}</span>
                     </a>
+
+                    <!-- Mobile Language Switcher -->
+                    <div class="md:hidden flex items-center mr-1">
+                        @if(App::getLocale() === 'en')
+                            <a href="{{ route('lang.switch', 'id') }}" class="p-1.5 text-[11px] font-extrabold text-slate-900 border border-amber-300 rounded-lg bg-amber-50" title="Switch to Indonesian">🇮🇩 ID</a>
+                        @else
+                            <a href="{{ route('lang.switch', 'en') }}" class="p-1.5 text-[11px] font-extrabold text-slate-900 border border-amber-300 rounded-lg bg-amber-50" title="Switch to English">🇬🇧 EN</a>
+                        @endif
+                    </div>
 
                     <!-- Mobile Direct User Link -->
                     <div class="md:hidden flex items-center">
@@ -197,7 +300,7 @@
                             </a>
                         @else
                             <a href="{{ route('login') }}" class="px-2.5 py-1 bg-amber-500 text-slate-950 font-extrabold text-xs rounded-lg shadow-2xs hover:bg-amber-600 transition">
-                                Masuk
+                                {{ __('Masuk') }}
                             </a>
                         @endauth
                     </div>
@@ -216,12 +319,12 @@
         <div class="grid grid-cols-5 h-14 text-[10px] font-bold text-slate-600">
             <a href="{{ route('catalog.index') }}" class="flex flex-col items-center justify-center gap-0.5 {{ request()->routeIs('catalog.index') && !request('category') ? 'text-amber-600' : 'hover:text-amber-600' }}">
                 <i class="fas fa-store text-lg"></i>
-                <span>Katalog</span>
+                <span>{{ __('Katalog') }}</span>
             </a>
 
             <a href="{{ route('catalog.index') }}#catalog-section" class="flex flex-col items-center justify-center gap-0.5 hover:text-amber-600">
                 <i class="fas fa-layer-group text-lg"></i>
-                <span>Kategori</span>
+                <span>{{ __('Kategori') }}</span>
             </a>
 
             <a href="{{ route('cart.index') }}" class="flex flex-col items-center justify-center gap-0.5 relative {{ request()->routeIs('cart.index') ? 'text-amber-600' : 'hover:text-amber-600' }}">
@@ -232,19 +335,19 @@
                         0
                     </span>
                 </div>
-                <span>Keranjang</span>
+                <span>{{ __('Keranjang') }}</span>
             </a>
 
             @auth
             <button @click="$dispatch('toggle-user-chat')" class="flex flex-col items-center justify-center gap-0.5 hover:text-amber-600">
                 <i class="fas fa-headset text-lg"></i>
-                <span>Chat Admin</span>
+                <span>{{ __('Chat Admin') }}</span>
             </button>
             @else
             <a href="{{ route('login') }}" class="flex flex-col items-center justify-center gap-0.5 hover:text-amber-600">
                 <i class="fas fa-headset text-lg"></i>
-                <span>Chat Admin</span>
-            </a>
+                <span>{{ __('Chat Admin') }}</span>
+            </button>
             @endauth
 
             @auth
@@ -255,7 +358,7 @@
             @else
             <a href="{{ route('login') }}" class="flex flex-col items-center justify-center gap-0.5 {{ request()->routeIs('login') ? 'text-amber-600' : 'hover:text-amber-600' }}">
                 <i class="fas fa-user-circle text-lg"></i>
-                <span>Masuk</span>
+                <span>{{ __('Masuk') }}</span>
             </a>
             @endauth
         </div>
@@ -266,27 +369,27 @@
         <div class="max-w-7xl mx-auto px-4 py-8 md:py-12">
             <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-8">
                 <div>
-                    <h3 class="font-bold text-gray-900 text-sm md:text-base uppercase tracking-wider mb-3">Layanan Pelanggan</h3>
+                    <h3 class="font-bold text-gray-900 text-sm md:text-base uppercase tracking-wider mb-3">{{ __('Layanan Pelanggan') }}</h3>
                     <ul class="space-y-2 text-xs">
-                        <li><a href="#" class="hover:text-amber-600">Bantuan</a></li>
-                        <li><a href="#" class="hover:text-amber-600">Metode Pembayaran</a></li>
+                        <li><button @click.prevent="$store.helpModal.open()" class="hover:text-amber-600 focus:outline-none">{{ __('Bantuan') }}</button></li>
+                        <li><a href="#" class="hover:text-amber-600">{{ __('Metode Pembayaran') }}</a></li>
                         <li><a href="#" class="hover:text-amber-600">Proats Pay</a></li>
-                        <li><a href="#" class="hover:text-amber-600">Garansi Toko</a></li>
-                        <li><a href="#" class="hover:text-amber-600">Hubungi Kami</a></li>
+                        <li><a href="#" class="hover:text-amber-600">{{ __('Garansi Toko') }}</a></li>
+                        <li><a href="#" class="hover:text-amber-600">{{ __('Hubungi Kami') }}</a></li>
                     </ul>
                 </div>
                 <div>
-                    <h3 class="font-bold text-gray-900 text-sm md:text-base uppercase tracking-wider mb-3">Jelajahi Proats</h3>
+                    <h3 class="font-bold text-gray-900 text-sm md:text-base uppercase tracking-wider mb-3">{{ __('Jelajahi Proats') }}</h3>
                     <ul class="space-y-2 text-xs">
-                        <li><a href="#" class="hover:text-amber-600">Tentang Kami</a></li>
-                        <li><a href="#" class="hover:text-amber-600">Karir</a></li>
-                        <li><a href="#" class="hover:text-amber-600">Kebijakan Privasi</a></li>
+                        <li><a href="#" class="hover:text-amber-600">{{ __('Tentang Kami') }}</a></li>
+                        <li><a href="#" class="hover:text-amber-600">{{ __('Karir') }}</a></li>
+                        <li><a href="#" class="hover:text-amber-600">{{ __('Kebijakan Privasi') }}</a></li>
                         <li><a href="#" class="hover:text-amber-600">Proats Blog</a></li>
                         <li><a href="#" class="hover:text-amber-600">Flash Sale</a></li>
                     </ul>
                 </div>
                 <div>
-                    <h3 class="font-bold text-gray-900 text-sm md:text-base uppercase tracking-wider mb-3">Pembayaran & Pengiriman</h3>
+                    <h3 class="font-bold text-gray-900 text-sm md:text-base uppercase tracking-wider mb-3">{{ __('Pembayaran & Pengiriman') }}</h3>
                     <div class="flex flex-wrap gap-2 text-gray-400 text-xl">
                         <i class="fab fa-cc-visa text-amber-600"></i>
                         <i class="fab fa-cc-mastercard text-amber-600"></i>
@@ -295,17 +398,23 @@
                     </div>
                 </div>
                 <div>
-                    <h3 class="font-bold text-gray-900 mb-3 text-sm">Ikuti Media Sosial</h3>
+                    <h3 class="font-bold text-gray-900 mb-3 text-sm">{{ __('Ikuti Media Sosial') }}</h3>
                     <div class="flex items-center space-x-3">
-                        <a href="#" class="w-8 h-8 rounded-full bg-amber-500 text-slate-950 flex items-center justify-center hover:opacity-90"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#" class="w-8 h-8 rounded-full bg-amber-500 text-slate-950 flex items-center justify-center hover:opacity-90"><i class="fab fa-instagram"></i></a>
-                        <a href="#" class="w-8 h-8 rounded-full bg-black text-white flex items-center justify-center hover:opacity-90"><i class="fab fa-tiktok"></i></a>
+                        @if(\App\Models\Setting::get('social_facebook'))
+                            <a href="{{ \App\Models\Setting::get('social_facebook') }}" target="_blank" class="w-8 h-8 rounded-full bg-amber-500 text-slate-950 flex items-center justify-center hover:opacity-90"><i class="fab fa-facebook-f"></i></a>
+                        @endif
+                        @if(\App\Models\Setting::get('social_instagram'))
+                            <a href="{{ \App\Models\Setting::get('social_instagram') }}" target="_blank" class="w-8 h-8 rounded-full bg-amber-500 text-slate-950 flex items-center justify-center hover:opacity-90"><i class="fab fa-instagram"></i></a>
+                        @endif
+                        @if(\App\Models\Setting::get('social_tiktok'))
+                            <a href="{{ \App\Models\Setting::get('social_tiktok') }}" target="_blank" class="w-8 h-8 rounded-full bg-black text-white flex items-center justify-center hover:opacity-90"><i class="fab fa-tiktok"></i></a>
+                        @endif
                     </div>
                 </div>
             </div>
             <div class="border-t border-gray-200 pt-6 text-center text-xs text-gray-500">
-                <p>&copy; {{ date('Y') }} Proats E-Catalog Showcase. Hak Cipta Dilindungi Undang-Undang.</p>
-                <p class="mt-1 text-gray-400">Desain khusus Putih Gradient Kuning Tua (Deep Gold Aesthetic).</p>
+                <p>&copy; {{ date('Y') }} Proats E-Catalog Showcase. {{ __('Hak Cipta Dilindungi Undang-Undang.') }}</p>
+                <p class="mt-1 text-gray-400">{{ __('Desain khusus Putih Gradient Kuning Tua (Deep Gold Aesthetic).') }}</p>
             </div>
         </div>
     </footer>
@@ -379,6 +488,73 @@
     </div>
 
     <script>
+        function notificationDropdown() {
+            return {
+                open: false,
+                unreadCount: 0,
+                notifications: [],
+
+                initNotifications() {
+                    this.fetchNotifications();
+                    setInterval(() => this.fetchNotifications(), 15000);
+                },
+
+                fetchNotifications() {
+                    fetch('{{ route('notifications.index') }}')
+                        .then(r => r.json())
+                        .then(d => {
+                            this.unreadCount = d.unread_count;
+                            this.notifications = d.notifications;
+                        })
+                        .catch(() => {});
+                },
+
+                clickNotification(item) {
+                    if (!item.read_at) {
+                        fetch(`/api/notifications/${item.id}/read`, {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                'Content-Type': 'application/json'
+                            }
+                        })
+                        .then(r => r.json())
+                        .then(() => {
+                            this.fetchNotifications();
+                            if (item.url && item.url !== '#') {
+                                window.location.href = item.url;
+                            }
+                        })
+                        .catch(() => {
+                            if (item.url && item.url !== '#') {
+                                window.location.href = item.url;
+                            }
+                        });
+                    } else {
+                        if (item.url && item.url !== '#') {
+                            window.location.href = item.url;
+                        }
+                    }
+                    this.open = false;
+                },
+
+                markAllAsRead() {
+                    fetch('/api/notifications/read-all', {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                            'Content-Type': 'application/json'
+                        }
+                    })
+                    .then(r => r.json())
+                    .then(() => {
+                        this.fetchNotifications();
+                    })
+                    .catch(() => {});
+                }
+            }
+        }
+
         function userChatWidget() {
             return {
                 isOpen: false,
@@ -450,6 +626,194 @@
         }
     </script>
     @endauth
+
+    <!-- Global Script (Accessible by Guests & Logged-In Users) -->
+    <script>
+        document.addEventListener('alpine:init', () => {
+            if (!Alpine.store('helpModal')) {
+                Alpine.store('helpModal', {
+                    isOpen: false,
+                    open() { this.isOpen = true; },
+                    close() { this.isOpen = false; }
+                });
+            }
+        });
+
+        function helpCenterModal() {
+            return {
+                searchQuery: '',
+                activeCategory: 'semua',
+                openFaq: null,
+                
+                categories: [
+                    { id: 'semua', name: '{{ __("Semua Bantuan") }}' },
+                    { id: 'pemesanan', name: '{{ __("Pemesanan") }}' },
+                    { id: 'pembayaran', name: '{{ __("Pembayaran") }}' },
+                    { id: 'pengiriman', name: '{{ __("Pengiriman") }}' },
+                    { id: 'layanan', name: '{{ __("Layanan") }}' }
+                ],
+                
+                faqs: [
+                    {
+                        cat: 'pemesanan',
+                        q: '{{ __("Bagaimana cara melakukan pemesanan di Proats?") }}',
+                        a: '{{ __("Pilih produk favorit Anda, masukkan ke keranjang belanja, klik Checkout, isi detail pengiriman Anda, lalu kirimkan rincian pesanan langsung ke WhatsApp admin untuk dikonfirmasi.") }}'
+                    },
+                    {
+                        cat: 'pembayaran',
+                        q: '{{ __("Metode pembayaran apa saja yang didukung?") }}',
+                        a: '{{ __("Kami menerima pembayaran via Transfer Bank (BCA & Mandiri), COD (Bayar di Tempat), QRIS, dan Proats Pay yang bebas biaya admin.") }}'
+                    },
+                    {
+                        cat: 'pengiriman',
+                        q: '{{ __("Apakah pengiriman di Proats E-Catalog gratis?") }}',
+                        a: '{{ __("Ya! Kami menyediakan pengiriman gratis untuk seluruh wilayah yang terjangkau oleh logistik partner kami.") }}'
+                    },
+                    {
+                        cat: 'layanan',
+                        q: '{{ __("Bagaimana dengan Garansi Toko?") }}',
+                        a: '{{ __("Semua instrumen musik yang dibeli melalui Proats mendapatkan Garansi Toko selama 30 hari sejak barang diterima.") }}'
+                    },
+                    {
+                        cat: 'layanan',
+                        q: '{{ __("Bagaimana cara menghubungi admin jika ada kendala?") }}',
+                        a: '{{ __("Anda bisa langsung menggunakan tombol Chat Admin Live di bawah untuk live chat, atau langsung ke WhatsApp kami di 0812-3456-7890.") }}'
+                    }
+                ],
+                
+                toggleFaq(idx) {
+                    this.openFaq = this.openFaq === idx ? null : idx;
+                },
+                
+                filteredFaqs() {
+                    let filtered = this.faqs;
+                    if (this.activeCategory !== 'semua') {
+                        filtered = filtered.filter(f => f.cat === this.activeCategory);
+                    }
+                    if (this.searchQuery.trim() !== '') {
+                        const query = this.searchQuery.toLowerCase();
+                        filtered = filtered.filter(f => f.q.toLowerCase().includes(query) || f.a.toLowerCase().includes(query));
+                    }
+                    return filtered;
+                }
+            }
+        }
+    </script>
+
+    <!-- Interactive Help Center & FAQ Modal -->
+    <div x-data="helpCenterModal()" 
+         x-show="$store.helpModal.isOpen" 
+         x-cloak 
+         class="fixed inset-0 z-50 overflow-y-auto flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs"
+         @keydown.escape.window="$store.helpModal.close()">
+        <div class="relative bg-white rounded-2xl max-w-2xl w-full shadow-2xl overflow-hidden border border-amber-100 flex flex-col max-h-[85vh] text-left"
+             @click.outside="$store.helpModal.close()"
+             x-transition:enter="transition ease-out duration-300"
+             x-transition:enter-start="opacity-0 scale-95"
+             x-transition:enter-end="opacity-100 scale-100"
+             x-transition:leave="transition ease-in duration-200"
+             x-transition:leave-start="opacity-100 scale-100"
+             x-transition:leave-end="opacity-0 scale-95">
+             
+            <!-- Header -->
+            <div class="p-6 bg-gradient-to-r from-amber-600 to-amber-700 text-white shrink-0 relative">
+                <button @click="$store.helpModal.close()" class="absolute top-4 right-4 text-white/80 hover:text-white hover:scale-110 transition text-xl">
+                    <i class="fas fa-xmark"></i>
+                </button>
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center text-2xl shadow-xs">
+                        <i class="far fa-circle-question"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-lg md:text-xl font-extrabold tracking-tight">{{ __('Pusat Bantuan & FAQ') }}</h2>
+                        <p class="text-xs text-amber-100/90 font-medium">{{ __('Temukan jawaban dan solusi cepat untuk pertanyaan Anda') }}</p>
+                    </div>
+                </div>
+                
+                <!-- Search FAQ Input -->
+                <div class="mt-5 relative">
+                    <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-amber-800">
+                        <i class="fas fa-magnifying-glass text-xs"></i>
+                    </span>
+                    <input type="text" 
+                           x-model="searchQuery" 
+                           placeholder="{{ __('Cari pertanyaan atau bantuan...') }}" 
+                           class="w-full text-xs py-3 pl-10 pr-4 bg-white/95 text-gray-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500 shadow-inner font-medium placeholder-gray-400">
+                </div>
+            </div>
+            
+            <!-- Category Tabs -->
+            <div class="px-6 py-3 bg-gray-50 border-b border-gray-100 flex gap-2 overflow-x-auto shrink-0 scrollbar-none">
+                <template x-for="cat in categories" :key="cat.id">
+                    <button @click="activeCategory = cat.id"
+                            class="px-3.5 py-1.5 rounded-xl font-extrabold text-[10px] md:text-xs border transition shrink-0 uppercase tracking-wider"
+                            :class="activeCategory === cat.id 
+                                ? 'bg-amber-600 text-white border-amber-600 shadow-xs' 
+                                : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-100 hover:text-gray-900'">
+                        <span x-text="cat.name"></span>
+                    </button>
+                </template>
+            </div>
+            
+            <!-- Content & FAQ List -->
+            <div class="p-6 overflow-y-auto flex-1 space-y-4">
+                <!-- FAQs Accordion -->
+                <div class="space-y-2.5">
+                    <template x-for="(faq, idx) in filteredFaqs()" :key="idx">
+                        <div class="bg-gray-50/50 rounded-xl border border-gray-100 hover:border-amber-200 transition">
+                            <!-- Question Button -->
+                            <button @click="toggleFaq(idx)" 
+                                    class="w-full p-4 text-left flex items-start justify-between gap-3 text-xs md:text-sm font-bold text-gray-800 hover:text-amber-700 transition">
+                                <span x-text="faq.q"></span>
+                                <i class="fas fa-chevron-down text-[10px] mt-1 text-gray-400 transition transform duration-200" 
+                                   :class="openFaq === idx ? 'rotate-180 text-amber-600' : ''"></i>
+                            </button>
+                            <!-- Answer Pane -->
+                            <div x-show="openFaq === idx" 
+                                 x-transition:enter="transition ease-out duration-100"
+                                 x-transition:enter-start="opacity-0 max-h-0"
+                                 x-transition:enter-end="opacity-100 max-h-screen"
+                                 class="px-4 pb-4 text-xs text-gray-500 leading-relaxed font-medium"
+                                 x-cloak>
+                                <p x-html="faq.a"></p>
+                            </div>
+                        </div>
+                    </template>
+                    <!-- Empty State -->
+                    <template x-if="filteredFaqs().length === 0">
+                        <div class="p-8 text-center text-gray-400">
+                            <i class="fas fa-magnifying-glass text-2xl mb-2 block text-gray-300"></i>
+                            <span class="text-xs font-semibold">{{ __('Tidak ada hasil untuk pencarian Anda') }}</span>
+                        </div>
+                    </template>
+                </div>
+            </div>
+            
+            <!-- Footer Call Actions -->
+            <div class="p-4 bg-gray-50 border-t border-gray-100 shrink-0 flex flex-col sm:flex-row gap-3 items-center justify-between text-xs">
+                <div class="text-gray-500 font-semibold text-center sm:text-left">
+                    {{ __('Belum menemukan jawaban?') }}
+                </div>
+                <div class="flex gap-2 w-full sm:w-auto">
+                    @auth
+                    <button @click="$store.helpModal.close(); $dispatch('toggle-user-chat')" 
+                            class="flex-1 sm:flex-none px-4 py-2.5 bg-amber-50 hover:bg-amber-100 text-amber-700 font-extrabold rounded-xl transition flex items-center justify-center gap-1.5 border border-amber-200 shadow-2xs">
+                        <i class="fas fa-headset"></i> {{ __('Chat Admin Live') }}
+                    </button>
+                    @else
+                    <a href="{{ route('login') }}" 
+                            class="flex-1 sm:flex-none px-4 py-2.5 bg-amber-50 hover:bg-amber-100 text-amber-700 font-extrabold rounded-xl transition flex items-center justify-center gap-1.5 border border-amber-200 shadow-2xs">
+                        <i class="fas fa-headset"></i> {{ __('Chat Admin Live') }}
+                    </a>
+                    @endauth
+                    <a href="https://wa.me/6281234567890" target="_blank" 
+                       class="flex-1 sm:flex-none px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold rounded-xl transition flex items-center justify-center gap-1.5 shadow-md shadow-emerald-600/10">
+                        <i class="fab fa-whatsapp"></i> WhatsApp
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
 
     @yield('scripts')
 </body>

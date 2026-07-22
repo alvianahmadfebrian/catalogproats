@@ -60,6 +60,27 @@ class ReviewController extends Controller
             ]
         );
 
+        $user = Auth::user();
+
+        // Notify user about review confirmation
+        $user->notify(new \App\Notifications\GeneralNotification(
+            "Terima kasih atas Ulasan Anda!",
+            "Ulasan bintang {$review->rating} untuk produk '{$product->name}' berhasil disimpan.",
+            route('catalog.index'),
+            'fas fa-star text-amber-500'
+        ));
+
+        // Notify admins about the new review
+        $admins = \App\Models\User::where('email', 'like', '%@proats.com')->get();
+        foreach ($admins as $admin) {
+            $admin->notify(new \App\Notifications\GeneralNotification(
+                "Ulasan Produk Baru Diterima",
+                "Ulasan bintang {$review->rating} dari {$user->name} untuk produk '{$product->name}': " . \Illuminate\Support\Str::limit($review->comment, 40),
+                route('admin.reviews.index'),
+                'fas fa-star text-amber-500'
+            ));
+        }
+
         // Recalculate Product average rating
         $newAvg = Review::where('product_id', $productId)->avg('rating');
         $product->update([

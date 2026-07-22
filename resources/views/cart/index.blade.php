@@ -88,14 +88,22 @@
                 <div>
                     <label class="block text-xs font-bold text-gray-700 mb-1">Kode Voucher Promo</label>
                     <div class="flex gap-2">
-                        <input type="text" x-model="voucherCode" placeholder="ONGKIRFREE / SHOPEE10K" class="w-full text-xs p-2.5 border border-gray-200 rounded-xl focus:ring-amber-500 uppercase font-mono">
+                        <input type="text" x-model="voucherCode" placeholder="Masukkan kode promo" class="w-full text-xs p-2.5 border border-gray-200 rounded-xl focus:ring-amber-500 uppercase font-mono">
                         <button @click="$store.cart.applyVoucher(voucherCode)" class="px-4 py-2.5 bg-slate-900 text-white text-xs font-bold rounded-xl hover:bg-black transition shrink-0">
                             Pakai
                         </button>
                     </div>
-                    <template x-if="$store.cart.voucher">
-                        <p class="text-[11px] text-emerald-600 font-bold mt-1.5 flex items-center gap-1">
-                            <i class="fas fa-check-circle"></i> Voucher "<span x-text="$store.cart.voucher"></span>" dipasang!
+                    <template x-if="$store.cart.promoMessage">
+                        <div class="text-[11px] text-emerald-600 font-bold mt-1.5 flex items-center justify-between gap-1 bg-emerald-50 p-2 rounded-lg border border-emerald-200">
+                            <span class="flex items-center gap-1">
+                                <i class="fas fa-check-circle"></i> <span x-text="$store.cart.promoMessage"></span>
+                            </span>
+                            <button @click="$store.cart.removeVoucher(); voucherCode = ''" class="text-red-500 hover:text-red-700 text-[10px] font-bold underline shrink-0">Hapus</button>
+                        </div>
+                    </template>
+                    <template x-if="$store.cart.promoError">
+                        <p class="text-[11px] text-red-600 font-bold mt-1.5 flex items-center gap-1">
+                            <i class="fas fa-circle-exclamation"></i> <span x-text="$store.cart.promoError"></span>
                         </p>
                     </template>
                 </div>
@@ -221,10 +229,14 @@
             Alpine.store('cart', {
                 items: JSON.parse(localStorage.getItem('proats_cart') || '[]'),
                 voucher: localStorage.getItem('proats_voucher') || '',
+                calculatedDiscount: parseFloat(localStorage.getItem('proats_discount') || '0'),
+                promoMessage: '',
+                promoError: '',
 
                 save() {
                     localStorage.setItem('proats_cart', JSON.stringify(this.items));
                     localStorage.setItem('proats_voucher', this.voucher);
+                    localStorage.setItem('proats_discount', this.calculatedDiscount.toString());
                 },
 
                 addItem(product, variant = '', qty = 1) {
@@ -242,11 +254,13 @@
                         });
                     }
                     this.save();
+                    if (this.voucher) this.revalidateVoucher();
                 },
 
                 removeItem(index) {
                     this.items.splice(index, 1);
                     this.save();
+                    if (this.voucher) this.revalidateVoucher();
                 },
 
                 updateQty(index, qty) {
@@ -255,6 +269,7 @@
                     } else {
                         this.items[index].qty = qty;
                         this.save();
+                        if (this.voucher) this.revalidateVoucher();
                     }
                 },
 
@@ -267,11 +282,7 @@
                 },
 
                 discount() {
-                    if (!this.voucher) return 0;
-                    if (this.voucher.toUpperCase() === 'ONGKIRFREE') return 20000;
-                    if (this.voucher.toUpperCase() === 'SHOPEE10K') return 10000;
-                    if (this.voucher.toUpperCase() === 'DISKON50') return this.subtotal() * 0.5;
-                    return 0;
+                    return this.calculatedDiscount || 0;
                 },
 
                 total() {
@@ -280,13 +291,82 @@
                 },
 
                 applyVoucher(code) {
-                    this.voucher = code.trim();
+                    const trimmed = code.trim().toUpperCase();
+                    if (!trimmed) {
+                        this.promoError = 'Masukkan kode promo terlebih dahulu.';
+                        this.promoMessage = '';
+                        return;
+                    }
+                    this.promoError = '';
+                    this.promoMessage = '';
+
+                    fetch('/api/promo/validate', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '',
+                            'X-Requested-With': 'XMLHttpRequest'
+                        },
+                        body: JSON.stringify({ code: trimmed, subtotal: this.subtotal() })
+                    })
+                    .then(res => res.json().then(data => ({ ok: res.ok, data })))
+                    .then(({ ok, data }) => {
+                        if (ok && data.valid) {
+                            this.voucher = data.code;
+                            this.calculatedDiscount = data.calculated_discount;
+                            this.promoMessage = data.message;
+                            this.promoError = '';
+                        } else {
+                            this.voucher = '';
+                            this.calculatedDiscount = 0;
+                            this.promoError = data.message || 'Kode promo tidak valid.';
+                            this.promoMessage = '';
+                        }
+                        this.save();
+                    })
+                    .catch(() => {
+                        this.promoError = 'Gagal memvalidasi kode promo. Coba lagi.';
+                        this.promoMessage = '';
+                    });
+                },
+
+                revalidateVoucher() {
+                    if (!this.voucher) return;
+                    fetch('/api/promo/validate', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '',
+                            'X-Requested-With': 'XMLHttpRequest'
+                        },
+                        body: JSON.stringify({ code: this.voucher, subtotal: this.subtotal() })
+                    })
+                    .then(res => res.json().then(data => ({ ok: res.ok, data })))
+                    .then(({ ok, data }) => {
+                        if (ok && data.valid) {
+                            this.calculatedDiscount = data.calculated_discount;
+                        } else {
+                            this.calculatedDiscount = 0;
+                        }
+                        this.save();
+                    })
+                    .catch(() => {});
+                },
+
+                removeVoucher() {
+                    this.voucher = '';
+                    this.calculatedDiscount = 0;
+                    this.promoMessage = '';
+                    this.promoError = '';
                     this.save();
                 },
 
                 clear() {
                     this.items = [];
                     this.voucher = '';
+                    this.calculatedDiscount = 0;
+                    this.promoMessage = '';
+                    this.promoError = '';
                     this.save();
                 }
             });
@@ -321,30 +401,63 @@
 
             submitOrder() {
                 const cart = Alpine.store('cart');
-                let text = `*ORDER PROATS CATALOG*\n\n`;
-                text += `👤 *Nama:* ${this.customer.name}\n`;
-                text += `📞 *No HP:* ${this.customer.phone}\n`;
-                text += `📍 *Alamat:* ${this.customer.address}\n`;
-                text += `💳 *Pembayaran:* ${this.customer.payment}\n\n`;
-                text += `🛒 *Item Pesanan:*\n`;
-
-                cart.items.forEach((item, idx) => {
-                    text += `${idx + 1}. ${item.name} (${item.variant || 'Standard'}) x${item.qty} = ${this.formatRp(item.price * item.qty)}\n`;
-                });
-
-                if (cart.voucher) {
-                    text += `\n🎟️ *Voucher (${cart.voucher}):* -${this.formatRp(cart.discount())}\n`;
-                }
-
-                text += `\n💰 *TOTAL BAYAR:* ${this.formatRp(cart.total())}\n`;
-                text += `\nTerima kasih sudah berbelanja di Proats E-Catalog!`;
-
-                const encoded = encodeURIComponent(text);
-                const waUrl = `https://wa.me/6281234567890?text=${encoded}`;
                 
-                cart.clear();
-                this.checkoutModal = false;
-                window.open(waUrl, '_blank');
+                // Prepare items payload for database
+                const payloadItems = cart.items.map(item => ({
+                    id: item.id,
+                    qty: item.qty,
+                    price: item.price
+                }));
+
+                fetch('{{ route('checkout.store') }}', {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        name: this.customer.name,
+                        phone: this.customer.phone,
+                        address: this.customer.address,
+                        payment: this.customer.payment,
+                        items: payloadItems
+                    })
+                })
+                .then(r => r.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        let text = `*ORDER PROATS CATALOG*\n\n`;
+                        text += `👤 *Nama:* ${this.customer.name}\n`;
+                        text += `📞 *No HP:* ${this.customer.phone}\n`;
+                        text += `📍 *Alamat:* ${this.customer.address}\n`;
+                        text += `💳 *Pembayaran:* ${this.customer.payment}\n\n`;
+                        text += `🛒 *Item Pesanan:*\n`;
+
+                        cart.items.forEach((item, idx) => {
+                            text += `${idx + 1}. ${item.name} (${item.variant || 'Standard'}) x${item.qty} = ${this.formatRp(item.price * item.qty)}\n`;
+                        });
+
+                        if (cart.voucher) {
+                            text += `\n🎟️ *Voucher (${cart.voucher}):* -${this.formatRp(cart.discount())}\n`;
+                        }
+
+                        text += `\n💰 *TOTAL BAYAR:* ${this.formatRp(cart.total())}\n`;
+                        text += `\nTerima kasih sudah berbelanja di Proats E-Catalog!`;
+
+                        const encoded = encodeURIComponent(text);
+                        const waUrl = `https://wa.me/6281234567890?text=${encoded}`;
+                        
+                        cart.clear();
+                        this.checkoutModal = false;
+                        window.open(waUrl, '_blank');
+                    } else {
+                        alert('Gagal memproses checkout. Silakan coba lagi.');
+                    }
+                })
+                .catch(() => {
+                    alert('Terjadi kesalahan jaringan.');
+                });
             }
         }
     }

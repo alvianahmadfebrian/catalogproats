@@ -14,7 +14,16 @@
 
     <form action="{{ $isEdit ? route('admin.products.update', $product->id) : route('admin.products.store') }}" 
           method="POST" 
-          x-data="{ imageUrl: '{{ old('image_url', $product->image_url) }}' }"
+          enctype="multipart/form-data"
+          x-data="{ 
+              imageUrl: '{{ old('image_url', $product->image_url) }}',
+              handleFileChange(e) {
+                  const file = e.target.files[0];
+                  if (file) {
+                      this.imageUrl = URL.createObjectURL(file);
+                  }
+              }
+          }"
           class="bg-white rounded-2xl shadow-xs border border-orange-100 p-6 md:p-8 space-y-6">
         @csrf
         @if($isEdit)
@@ -39,15 +48,14 @@
                 </div>
 
                 <div>
-                    <label class="block text-xs font-bold text-gray-700 mb-1">URL Gambar (Image Link)</label>
-                    <input type="url" 
-                           name="image_url" 
-                           x-model="imageUrl"
-                           value="{{ old('image_url', $product->image_url) }}" 
-                           required 
-                           placeholder="https://images.unsplash.com/..." 
-                           class="w-full p-2.5 border border-gray-200 rounded-xl text-xs focus:outline-none focus:border-orange-500 font-medium">
-                    <p class="text-[10px] text-gray-400 mt-1">Masukkan URL gambar langsung (Unsplash, Imgur, dsb).</p>
+                    <label class="block text-xs font-bold text-gray-700 mb-1">Unggah Foto Produk</label>
+                    <input type="file" 
+                           name="image_file" 
+                           accept="image/*"
+                           @change="handleFileChange($event)"
+                           {{ !$product->image_url ? 'required' : '' }}
+                           class="w-full p-2.5 border border-gray-200 rounded-xl text-xs focus:outline-none focus:border-orange-500 font-medium file:mr-4 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-[11px] file:font-bold file:bg-orange-50 file:text-orange-700 hover:file:bg-orange-100">
+                    <p class="text-[10px] text-gray-400 mt-1">Pilih file gambar instrumen (.jpg, .png, .jpeg, .webp, maks 2MB).</p>
                 </div>
             </div>
 
